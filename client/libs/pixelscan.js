@@ -867,8 +867,8 @@ class ParallaxSprite extends PIXI.Sprite {
         super(texture);
         
         this.aabb = aabb;
-        this.scale.x = 3;
-        this.scale.y = 3;
+        // this.scale.x = 3;
+        // this.scale.y = 3;
     }
 
     update(cameraAABB) {
@@ -882,11 +882,8 @@ class ParallaxSprite extends PIXI.Sprite {
         const progressX = Math.min(Math.max((cameraCenterX - minX) / (maxX - minX), 0), 1);
         const progressY = Math.min(Math.max((cameraCenterY - minY) / (maxY - minY), 0), 1);
 
-        const desiredMinX = 0;
-        const desiredMinY = 0;
-
-        const desiredMaxX = -(this.texture.width - cameraAABB.width) * 3;
-        const desiredMaxY = -(this.texture.height - cameraAABB.height) * 3;
+        // const desiredMaxX = this.texture.width - cameraAABB.width;
+        // const desiredMaxY = this.texture.height - cameraAABB.height;
 
         // const containerOffsetX = cameraAABB.x;
         // const containerOffsetY = cameraAABB.y;
@@ -896,12 +893,14 @@ class ParallaxSprite extends PIXI.Sprite {
         // const desiredMaxX = this.aabb.x + this.aabb.width - cameraAABB.width;
         // const desiredMaxY = this.aabb.y + this.aabb.height - cameraAABB.height;
 
-        this.position.x = (desiredMaxX - desiredMinX) * progressX + desiredMinX;
-        this.position.y = (desiredMaxY - desiredMinY) * progressY + desiredMinY;
+        // console.log(this.index, ': ', this.texture.width - cameraAABB.width, ': ', this.texture.width, cameraAABB.width);
 
-        if (this.special) {
-            console.log(this.position.x, this.position.y);
-        }
+        // this.position.x = desiredMaxX * progressX;
+        // this.position.y = desiredMaxY * progressY;
+
+        // if (this.special) {
+        //     console.log(this.position.x, this.position.y);
+        // }
 
         // this.position.x = deltaX * progressX / 3;
         // this.position.y = deltaY * progressY / 3;
@@ -914,11 +913,11 @@ class ParallaxSprite extends PIXI.Sprite {
         // this.position.x = (aabbMaxX - 0) * progressX + minX;
         // this.position.y = (aabbMaxY - 0) * progressY + minY;
 
-        // const spriteMaxDeltaX = this.texture.width - cameraAABB.width;
-        // const spriteMaxDeltaY = this.texture.height - cameraAABB.height;
+        const spriteMaxDeltaX = this.texture.width - cameraAABB.width;
+        const spriteMaxDeltaY = this.texture.height - cameraAABB.height;
 
-        // this.position.x = spriteMaxDeltaX * progressX;
-        // this.position.y = spriteMaxDeltaY * progressY;
+        this.position.x = -spriteMaxDeltaX * progressX;
+        this.position.y = -spriteMaxDeltaY * progressY;
     }
 }
 class UpdateTexture extends PIXI.BaseTexture {

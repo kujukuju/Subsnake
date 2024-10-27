@@ -36,8 +36,8 @@ class Renderer {
         Renderer.container.addChild(Renderer.foreground);
         Renderer.container.addChild(Renderer.canvas);
 
-        // Renderer.parallax.scale.x = 3;
-        // Renderer.parallax.scale.y = 3;
+        Renderer.parallax.scale.x = 3;
+        Renderer.parallax.scale.y = 3;
 
         Camera.addContainer(Renderer.container);
         Camera.setScaleImmediate(new Vec2(1.5, 1.5));

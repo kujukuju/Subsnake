@@ -19,6 +19,9 @@ function subsnake() {
 
 function join() {
     Connection.connect();
+    
+    Camera.scaleSpeedStrength = 0.01;
+    Camera.setScale(new Vec2(3, 3));
 }
 
 function clamp(v, a, b) {

@@ -35,9 +35,7 @@ class Environment {
             Environment.parallaxSprites.push(sprite);
             Renderer.parallax.addChild(sprite);
             
-            if (i === 7) {
-                sprite.special = true;
-            }
+            sprite.index = i;
         }
     }
 

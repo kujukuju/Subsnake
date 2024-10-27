@@ -38,6 +38,12 @@
         },
         {
             "path": "../BlockAllocatorJai"
+        },
+        {
+            "path": "../TwitchCaptions"
+        },
+        {
+            "path": "../ContiguousJsonJai"
         }
     ],
     "settings": {}
