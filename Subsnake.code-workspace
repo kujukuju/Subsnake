@@ -1,0 +1,44 @@
+{
+	"folders": [
+        {
+            "name": "Subsnake",
+            "path": "."
+        },
+        {
+            "name": "FatGoblins",
+            "path": "../FatGoblins"
+        },
+        {
+            "name": "FatGoblinsServer",
+            "path": "../FatGoblinsServer"
+        },
+        {
+            "name": "modules",
+            "path": "../../../../jai/modules"
+        },
+        {
+            "name": "mongooseJai",
+            "path": "../mongooseJai"
+        },
+        {
+            "name": "mongooseJaiHelpers",
+            "path": "../mongooseJaiHelpers"
+        },
+        {
+            "path": "../KodaJai"
+        },
+        {
+            "path": "../PixelScanJS"
+        },
+        {
+            "path": "../MoonJam2022"
+        },
+        {
+            "path": "../PixelScanJai"
+        },
+        {
+            "path": "../BlockAllocatorJai"
+        }
+    ],
+    "settings": {}
+}

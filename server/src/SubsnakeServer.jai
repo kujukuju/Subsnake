@@ -3,7 +3,7 @@ TICKRATE :: 30;
 TICK_MS :: 1000.0 / TICKRATE;
 
 main :: () {
-    server := mg_ws_server_create(76253);
+    server := mg_ws_server_create(7625);
     defer mg_ws_server_free(server);
 
     desired_room_count := 1;
@@ -11,11 +11,15 @@ main :: () {
 
     for *room_thread: room_threads {
         information := New(RoomInformation);
+        information.room_id = it_index;
+        
         room_thread.data = information;
 
         init(*information.loop_semaphore);
-
+        init(*information.done_semaphore);
         thread_init(room_thread, run_room);
+
+        register_room(it_index);
     }
 
     for *room_thread: room_threads {
@@ -23,7 +27,14 @@ main :: () {
     }
 
     while true {
+        reset_temporary_storage();
+        
         start := seconds_since_init() * 1000;
+
+        flush_connections(server);
+        poll_connections(server);
+
+        // distribute packets and connections
 
         // do stuff here
         for *room_thread: room_threads {
@@ -35,7 +46,7 @@ main :: () {
         for *room_thread: room_threads {
             information := cast(*RoomInformation) room_thread.data;
         
-            wait_for(*information.loop_semaphore);
+            wait_for(*information.done_semaphore);
         }
 
         remaining := max(TICK_MS - (seconds_since_init() * 1000 - start), 0);
@@ -70,12 +81,18 @@ sleep_nanoseconds :: (nanoseconds: int) {
 }
 
 RoomInformation :: struct {
+    room_id: int;
     loop_semaphore: Semaphore;
+    done_semaphore: Semaphore;
 }
 
 room_threads: [] Thread;
 
 #import "Basic";
+#import "Math";
 #import "Thread";
+#import "Hash_Table";
+#import "stb_image";
 
+#import "BlockAllocatorJai";
 #import "mongooseJaiHelpers";
