@@ -38,6 +38,12 @@
         },
         {
             "path": "../BlockAllocatorJai"
+        },
+        {
+            "path": "../JaiBoundingTree"
+        },
+        {
+            "path": "../JaiMath"
         }
     ],
     "settings": {}

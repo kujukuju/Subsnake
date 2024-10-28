@@ -98,3 +98,5 @@ room_threads: [] Thread;
 
 #import "BlockAllocatorJai";
 #import "mongooseJaiHelpers";
+#import "JaiBoundingTree";
+#import "JaiMath";

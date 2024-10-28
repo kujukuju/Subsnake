@@ -13,6 +13,8 @@ run_room :: (thread: *Thread) -> int {
     context.loop_semaphore = *information.loop_semaphore;
     context.done_semaphore = *information.done_semaphore;
 
+    context.snake_manager.snake_tree = create_bounding_tree2(*Snake);
+
     load_level();
 
     loop_room();

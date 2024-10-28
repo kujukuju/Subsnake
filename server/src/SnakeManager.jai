@@ -1,4 +1,7 @@
 
+bite_radius :: 8.0;
+body_radius :: 12.0;
+
 max_dash_charge :: 150.0;
 
 Snake :: struct {
@@ -12,6 +15,9 @@ Snake :: struct {
     history: History;
     continual_gravity_affect: float;
     available_dash_charge: float = max_dash_charge;
+    aabb: AABB2;
+    killed: int;
+    dead: bool;
 }
 
 free :: (snake: Snake) {
@@ -68,8 +74,6 @@ update :: (snake: *Snake) {
         snake.available_dash_charge = min(snake.available_dash_charge + underground_strength * 0.5, max_dash_charge);
     }
 
-    // old_velocity := snake.velocity;
-
     snake.velocity += accel_vec;
 
     friction_force := snake.velocity * (underground_strength / 2.0 + 0.5);
@@ -83,6 +87,9 @@ update :: (snake: *Snake) {
     add_history(*snake.history, snake.position, cast(float) snake_image.width);
     snake.points, snake.point_count = get_points(snake.history, 20, cast(float) snake_image.width);
 
+    snake.aabb = calculate_snake_aabb(snake);
+    create_proxy(*context.snake_manager.snake_tree, snake.aabb, snake);
+
     add_packet(context.room_id, RoomSetPositionVelocityPacket.{
         id = snake.id,
         time = cast(u32) context.time,
@@ -91,9 +98,73 @@ update :: (snake: *Snake) {
     });
 }
 
+calculate_snake_aabb :: (snake: *Snake) -> AABB2 {
+    padding := max(bite_radius, body_radius);
+
+    points: [] Vector2;
+    points.data = snake.points.data;
+    points.count = snake.point_count;
+
+    if points.count == 0 {
+        aabb: AABB2;
+        aabb.lower = snake.position - padding;
+        aabb.upper = snake.position + padding;
+        return aabb;
+    }
+
+    aabb: AABB2;
+    aabb.lower = points[0] - padding;
+    aabb.upper = points[0] + padding;
+    for point: points {
+        aabb.lower = min(aabb.lower, point - padding);
+        aabb.upper = max(aabb.upper, point + padding);
+    }
+
+    return aabb;
+}
+
+check_damage :: (snake: *Snake) {
+    points: [] Vector2;
+    points.data = snake.points.data;
+    points.count = snake.point_count;
+
+    if points.count < 2 {
+        return;
+    }
+
+    head_line := Line2.{points[0], points[1]};
+
+    for potential_snake: query(*context.snake_manager.snake_tree, snake.aabb) {
+        if potential_snake == snake {
+            continue;
+        }
+
+        enemy_points: [] Vector2;
+        enemy_points.data = potential_snake.points.data;
+        enemy_points.count = potential_snake.point_count;
+
+        if enemy_points.count < 3 {
+            continue;
+        }
+
+        for i: 1..enemy_points.count - 2 {
+            curr_point := enemy_points[i];
+            next_point := enemy_points[i + 1];
+
+            enemy_body_line := Line2.{curr_point, next_point};
+            _, _, _, _, bite_distance_squared := nearest_point(head_line, enemy_body_line);
+            if bite_distance_squared <= bite_radius * bite_radius {
+                snake.killed += 1;
+                potential_snake.dead = true;
+            }
+        }
+    }
+}
+
 SnakeManager :: struct {
     snakes: BlockAllocator(Snake);
     snake_lookup: Table(u32, *Snake);
+    snake_tree: BoundingTree2(*Snake);
 }
 
 create_snake :: (id: u32) -> *Snake {
@@ -127,7 +198,23 @@ get_snake :: (id: u32) -> *Snake {
 }
 
 snake_manager_update :: () {
+    tree_reset(*context.snake_manager.snake_tree);
+
     for *snake: context.snake_manager.snakes {
         update(snake);
+    }
+
+    for *snake: context.snake_manager.snakes {
+        check_damage(snake);
+    }
+
+    for *snake: context.snake_manager.snakes {
+        if snake.dead {
+            add_packet(context.room_id, RoomRemoveEntityPacket.{
+                id = snake.id,
+            });
+
+            remove;
+        }
     }
 }
