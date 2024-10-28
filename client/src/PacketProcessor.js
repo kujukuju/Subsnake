@@ -1,4 +1,6 @@
 
+let minimumLatency = Number.MAX_SAFE_INTEGER;
+
 class PacketProcessor {
     static SET_CLIENT = 0;
     static SET_POSITION_VELOCITY = 1;
@@ -41,6 +43,8 @@ class PacketProcessor {
             case PacketProcessor.SET_POSITION_VELOCITY: {
                 const id = BinaryHelper.readUnsignedInt(bytes, index);
                 index += 4;
+                const time = BinaryHelper.readUnsignedInt(bytes, index);
+                index += 4;
                 const posX = BinaryHelper.readFloat(bytes, index);
                 index += 4;
                 const posY = BinaryHelper.readFloat(bytes, index);
@@ -54,6 +58,10 @@ class PacketProcessor {
                     SnakeManager.addSnake(id);
                 }
 
+                const latency = Date.now() - time;
+                minimumLatency = Math.min(minimumLatency, latency);
+                const clientTime = time + minimumLatency;
+
                 const snake = SnakeManager.snakes[id];
 
                 snake.position.x = posX;
@@ -61,7 +69,7 @@ class PacketProcessor {
                 snake.velocity.x = velX;
                 snake.velocity.y = velY;
 
-                snake.interp.set(Date.now(), snake.position, snake.velocity);
+                snake.interp.set(clientTime, snake.position, snake.velocity);
                 snake.history.addHistory(snake.position, snake.velocity, Snake.TEXTURE.width + Snake.INTERP_PADDING);
                 
             } break;

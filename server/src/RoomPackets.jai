@@ -19,6 +19,7 @@ RoomSetPositionVelocityPacket :: struct {
     using #as packet: RoomPacket #align 1;
     packet.type = .SetPositionVelocity;
     id: u32 #align 1;
+    time: u32 #align 1;
     position: Vector2 #align 1;
     velocity: Vector2 #align 1;
 } #no_padding

@@ -50,8 +50,8 @@ class Snake {
         //     const renderPosition = this.getRenderPosition();
 
         //     for (let i = 0; i < points.length; i++) {
-        //         points[i].x += -startX + renderPosition.x;
-        //         points[i].y += -startY + renderPosition.y;
+        //         points[i].x += renderPosition.x - startX;
+        //         points[i].y += renderPosition.y - startY;
         //     }
         // }
 

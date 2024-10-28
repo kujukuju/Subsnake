@@ -76,12 +76,13 @@ class History {
             while (nextDistance >= accDistance && nextDistance < accDistance + segmentDistance) {
                 let progress = clamp((nextDistance - accDistance) / segmentDistance, 0, 1);
 
-                const interpPoint = new Vec2();
-                Utilities.hermite(progress, currPoint, nextPoint, currVelocity, nextVelocity, interpPoint);
+                // const interpPoint = new Vec2();
+                // Utilities.hermite(progress, currPoint, nextPoint, currVelocity, nextVelocity, interpPoint);
+                // points[nextIndex] = interpPoint;
 
-                // const pointX = (nextPoint.x - currPoint.x) * progress + currPoint.x;
-                // const pointY = (nextPoint.y - currPoint.y) * progress + currPoint.y;
-                points[nextIndex] = interpPoint;
+                const pointX = (nextPoint.x - currPoint.x) * progress + currPoint.x;
+                const pointY = (nextPoint.y - currPoint.y) * progress + currPoint.y;
+                points[nextIndex] = Vec2.from(pointX, pointY);
 
                 nextDistance += distanceInc;
                 nextIndex += 1;

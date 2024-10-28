@@ -21,8 +21,10 @@ class Loop {
 
         const duration = finish - start;
 
-        setTimeout(() => {
-            Loop.loop();
-        }, Math.max(1, Loop.DELAY - duration));
+        window.requestAnimationFrame(Loop.loop);
+
+        // setTimeout(() => {
+        //     Loop.loop();
+        // }, Math.max(1, Loop.DELAY - duration));
     }
 }

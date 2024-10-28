@@ -1,4 +1,5 @@
 
+#add_context time: float64;
 #add_context room_id: int;
 #add_context loop_semaphore: *Semaphore;
 #add_context done_semaphore: *Semaphore;
@@ -24,6 +25,8 @@ loop_room :: () {
         reset_temporary_storage();
         
         wait_for(context.loop_semaphore);
+
+        context.time = seconds_since_init() * 1000;
 
         events := get_events(context.room_id);
         process_events(events);

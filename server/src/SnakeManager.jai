@@ -1,5 +1,5 @@
 
-max_dash_charge :: 300.0;
+max_dash_charge :: 150.0;
 
 Snake :: struct {
     id: u32;
@@ -68,43 +68,7 @@ update :: (snake: *Snake) {
         snake.available_dash_charge = min(snake.available_dash_charge + underground_strength * 0.5, max_dash_charge);
     }
 
-    // in_ground := false;
-    // for point: points {
-    //     in_ground = in_ground || is_ground(cast(int) point.x, cast(int) point.y);
-    // }
-
-    // // if !in_ground {
-    // //     acceleration.y = 0;
-    // // }
-    
-    // acceleration = normalize(acceleration);
-
-    // turn_strength :: (velocity: Vector2) -> float {
-    //     return sqrt(length(velocity) + 1) / 4.0;
-    // }
-
-    // max_velocity :: 8;
-    // if length(snake.velocity) <= max_velocity + 0.00001 {
-    //     new_speed := length(snake.velocity + acceleration * 0.2);
-
-    //     snake.velocity = normalize(snake.velocity + turn_strength(snake.velocity) * acceleration) * new_speed;
-    //     if length(snake.velocity) > max_velocity {
-    //         snake.velocity = normalize(snake.velocity) * max_velocity;
-    //     }
-    // } else {
-    //     original_speed := length(snake.velocity);
-
-    //     new_speed := length(snake.velocity + acceleration * 0.2);
-
-    //     snake.velocity = normalize(snake.velocity + turn_strength(snake.velocity) * acceleration) * new_speed;
-    //     if length(snake.velocity) > max_velocity {
-    //         friction := ifx in_ground then gravity * 4 else gravity * 0.1;
-    //         speed := length(snake.velocity) - friction;
-    //         snake.velocity = normalize(snake.velocity) * max(speed, max_velocity);
-    //     }
-    // }
-
-    old_velocity := snake.velocity;
+    // old_velocity := snake.velocity;
 
     snake.velocity += accel_vec;
 
@@ -116,17 +80,14 @@ update :: (snake: *Snake) {
     
     snake.position += snake.velocity;
 
-    // if !in_ground {
-    //     snake.velocity.y += gravity;
-    // }
-
     add_history(*snake.history, snake.position, cast(float) snake_image.width);
     snake.points, snake.point_count = get_points(snake.history, 20, cast(float) snake_image.width);
 
     add_packet(context.room_id, RoomSetPositionVelocityPacket.{
         id = snake.id,
+        time = cast(u32) context.time,
         position = snake.position,
-        velocity = old_velocity,
+        velocity = snake.velocity,
     });
 }
 
