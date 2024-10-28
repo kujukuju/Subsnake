@@ -7,7 +7,7 @@ class Logic {
 
         SnakeManager.update();
         if (SnakeManager.snakes[clientID]) {
-            Camera.setPosition(SnakeManager.snakes[clientID].getPosition());
+            Camera.setPosition(SnakeManager.snakes[clientID].getRenderPosition());
         }
 
         ClientInput.update();

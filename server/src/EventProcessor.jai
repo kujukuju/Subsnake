@@ -70,5 +70,6 @@ process :: (connection: u32, packet: *ClientInputsPacket) {
     snake := get_snake(connection);
     if snake {
         snake.direction = packet.direction;
+        snake.boost_requested = !!packet.boost;
     }
 }

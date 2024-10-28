@@ -62,6 +62,7 @@ class PacketProcessor {
                 snake.velocity.y = velY;
 
                 snake.interp.set(Date.now(), snake.position, snake.velocity);
+                snake.history.addHistory(snake.position, snake.velocity, Snake.TEXTURE.width + Snake.INTERP_PADDING);
                 
             } break;
 

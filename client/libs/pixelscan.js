@@ -474,6 +474,7 @@ class Camera {
     static nextScale = new Vec2(1, 1);
 
     static containers = [];
+    static invContainers = [];
 
     static positionSpeedStrength = 0.5;
     static scaleSpeedStrength = 0.05;
@@ -595,10 +596,21 @@ class Camera {
             Camera.containers[i].scale.x = scaleX;
             Camera.containers[i].scale.y = scaleY;
         }
+
+        for (let i = 0; i < Camera.invContainers.length; i++) {
+            Camera.invContainers[i].position.x = -(x + shakeX);
+            Camera.invContainers[i].position.y = -(y + shakeY);
+            Camera.invContainers[i].scale.x = 1 / scaleX;
+            Camera.invContainers[i].scale.y = 1 / scaleY;
+        }
     }
 
     static addContainer(container) {
         Camera.containers.push(container);
+    }
+
+    static addInvContainer(container) {
+        Camera.invContainers.push(container);
     }
 }
 class CPUTracker extends PIXI.Text {
@@ -867,8 +879,6 @@ class ParallaxSprite extends PIXI.Sprite {
         super(texture);
         
         this.aabb = aabb;
-        // this.scale.x = 3;
-        // this.scale.y = 3;
     }
 
     update(cameraAABB) {
@@ -882,39 +892,13 @@ class ParallaxSprite extends PIXI.Sprite {
         const progressX = Math.min(Math.max((cameraCenterX - minX) / (maxX - minX), 0), 1);
         const progressY = Math.min(Math.max((cameraCenterY - minY) / (maxY - minY), 0), 1);
 
-        // const desiredMaxX = this.texture.width - cameraAABB.width;
-        // const desiredMaxY = this.texture.height - cameraAABB.height;
+        const requiredScale = Math.max(cameraAABB.width / this.texture.width, cameraAABB.height / this.texture.height, 1);
 
-        // const containerOffsetX = cameraAABB.x;
-        // const containerOffsetY = cameraAABB.y;
+        this.scale.x = requiredScale;
+        this.scale.y = requiredScale;
 
-        // const desiredMinX = this.texture.width - cameraAABB.width;
-        // const desiredMinY = this.texture.height - cameraAABB.height;
-        // const desiredMaxX = this.aabb.x + this.aabb.width - cameraAABB.width;
-        // const desiredMaxY = this.aabb.y + this.aabb.height - cameraAABB.height;
-
-        // console.log(this.index, ': ', this.texture.width - cameraAABB.width, ': ', this.texture.width, cameraAABB.width);
-
-        // this.position.x = desiredMaxX * progressX;
-        // this.position.y = desiredMaxY * progressY;
-
-        // if (this.special) {
-        //     console.log(this.position.x, this.position.y);
-        // }
-
-        // this.position.x = deltaX * progressX / 3;
-        // this.position.y = deltaY * progressY / 3;
-        // this.position.x = 400;
-        // this.position.y = 400;
-
-        // const aabbMaxX = this.aabb.x + this.aabb.width;
-        // const aabbMaxY = this.aabb.y + this.aabb.height;
-
-        // this.position.x = (aabbMaxX - 0) * progressX + minX;
-        // this.position.y = (aabbMaxY - 0) * progressY + minY;
-
-        const spriteMaxDeltaX = this.texture.width - cameraAABB.width;
-        const spriteMaxDeltaY = this.texture.height - cameraAABB.height;
+        const spriteMaxDeltaX = this.width - cameraAABB.width;
+        const spriteMaxDeltaY = this.height - cameraAABB.height;
 
         this.position.x = -spriteMaxDeltaX * progressX;
         this.position.y = -spriteMaxDeltaY * progressY;

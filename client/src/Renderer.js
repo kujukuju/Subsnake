@@ -11,6 +11,7 @@ class Renderer {
     static backgroundish = new PIXI.Container();
     static midcanvas = new DebugCanvas();
     static midground = new PIXI.Container();
+    static underground = new PIXI.Container();
     static names = new PIXI.Container();
     static foreground = new PIXI.Container();
 
@@ -34,6 +35,7 @@ class Renderer {
         Renderer.container.addChild(Renderer.midground);
         Renderer.container.addChild(Renderer.names);
         Renderer.container.addChild(Renderer.foreground);
+        Renderer.container.addChild(Renderer.underground);
         Renderer.container.addChild(Renderer.canvas);
 
         Renderer.parallax.scale.x = 3;

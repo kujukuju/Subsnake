@@ -8,21 +8,15 @@ Level :: struct {
 load_level :: () {
     using context.level;
 
-    w: s32;
-    h: s32;
-    channels: s32;
-    loaded_pixels := stbi_load("assets/physics.png", *w, *h, *channels, 4);
-
-    width = w;
-    height = h;
-
+    width = physics_image.width;
+    height = physics_image.height;
     pixels = NewArray(width * height, bool);
     
-    for y: 0..h - 1 {
-        for x: 0..w - 1 {
+    for y: 0..height - 1 {
+        for x: 0..width - 1 {
             index := y * width + x;
 
-            pixels[index] = loaded_pixels[index * 4 + 3] > 0;
+            pixels[index] = physics_image.pixels[index * 4 + 3] > 0;
         }
     }
 }

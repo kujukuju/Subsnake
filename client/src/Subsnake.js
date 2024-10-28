@@ -8,7 +8,6 @@ let clientID = 0;
 function subsnake() {
     Renderer.initialize();
     Environment.initialize();
-    Physics.initialize();
 
     Camera.setPositionImmediate(new Vec2(1343, 729));
 
@@ -19,8 +18,8 @@ function subsnake() {
 
 function join() {
     Connection.connect();
-    
-    Camera.scaleSpeedStrength = 0.01;
+
+    Camera.scaleSpeedStrength = 0.005;
     Camera.setScale(new Vec2(3, 3));
 }
 

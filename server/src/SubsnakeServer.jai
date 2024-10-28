@@ -8,6 +8,8 @@ main :: () {
 
     desired_room_count := 1;
     room_threads = NewArray(desired_room_count, Thread);
+    
+    load_assets();
 
     for *room_thread: room_threads {
         information := New(RoomInformation);
@@ -28,7 +30,7 @@ main :: () {
 
     while true {
         reset_temporary_storage();
-        
+
         start := seconds_since_init() * 1000;
 
         flush_connections(server);

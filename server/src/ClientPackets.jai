@@ -11,4 +11,5 @@ ClientInputsPacket :: struct {
     using #as packet: ClientPacket #align 1;
     packet.type = .Inputs;
     direction: Vector2 #align 1;
+    boost: u8 #align 1;
 } #no_padding

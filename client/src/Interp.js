@@ -61,14 +61,24 @@ class Interp {
             const progress = clamp((time - this.timeOld) / TICK_MS, 0, 1);
 
             const interpPosition = new Vec2();
-            Utilities.hermite(progress, [this.positionOld, this.position], [this.velocityOld, this.velocity], interpPosition);
+            Utilities.hermite(progress, this.positionOld, this.position, this.velocityOld, this.velocity, interpPosition);
             return interpPosition;
         } else {
             const progress = clamp((time - this.timeOlder) / TICK_MS, 0, 1);
 
             const interpPosition = new Vec2();
-            Utilities.hermite(progress, [this.positionOlder, this.positionOld], [this.velocityOlder, this.velocityOld], interpPosition);
+            Utilities.hermite(progress, this.positionOlder, this.positionOld, this.velocityOlder, this.velocityOld, interpPosition);
             return interpPosition;
+        }
+    }
+
+    getTickOffset(time) {
+        if (time >= this.time) {
+            return 0;
+        } else if (time >= this.timeOld) {
+            return 1 - clamp((time - this.timeOld) / TICK_MS, 0, 1);
+        } else {
+            return 1 - clamp((time - this.timeOlder) / TICK_MS, 0, 1) + 1;
         }
     }
 }
