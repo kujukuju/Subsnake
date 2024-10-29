@@ -29,6 +29,8 @@ update :: (snake: *Snake) {
 
     old_available_boost_charge := snake.available_boost_charge;
 
+    scale := get_scale(snake);
+
     points: [] Vector2;
     points.data = snake.points.data;
     points.count = snake.point_count;
@@ -36,7 +38,7 @@ update :: (snake: *Snake) {
     accel_vec := snake.direction;
     accel_length := length(accel_vec);
     accel_length = clamp(accel_length - 10, 0, 20);
-    accel_vec = normalize(accel_vec) * accel_length * 0.01;
+    accel_vec = normalize(accel_vec) * accel_length * 0.02;
 
     friction := 0.02;
     boosting := false;
@@ -48,7 +50,7 @@ update :: (snake: *Snake) {
         snake.boost_recharge_ticks = boost_recharge;
         snake.available_boost_charge = max(snake.available_boost_charge - 1, 0);
         friction *= 0.1;
-        accel_vec *= 4;
+        accel_vec *= 2;
     }
 
     underground_strength := 0.0;
@@ -91,7 +93,7 @@ update :: (snake: *Snake) {
 
     snake.velocity += friction_force;
     
-    snake.position += snake.velocity;
+    snake.position += snake.velocity * scale;
     if snake.position.x < 0 {
         snake.position.x = 0;
         snake.velocity.x = max(snake.velocity.x, 0) - min(snake.velocity.x, 0) / 2;
@@ -106,8 +108,6 @@ update :: (snake: *Snake) {
         snake.position.y = context.level.height - 1.0;
         snake.velocity.y = min(snake.velocity.y, 0) - max(snake.velocity.y, 0) / 2;
     }
-
-    scale := get_scale(snake);
 
     add_history(*snake.history, snake.position, cast(float) snake_image.width * scale);
     snake.points, snake.point_count = get_points(snake.history, 20, cast(float) snake_image.width * scale);
