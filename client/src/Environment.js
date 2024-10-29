@@ -30,6 +30,57 @@ class Environment {
         Environment.foregroundSprite = new PIXI.Sprite(Environment.FOREGROUND);
         Environment.backgroundSprite = new PIXI.Sprite(Environment.BACKGROUND);
 
+        const FOREGROUND_EDGES = [
+            // top left
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(0, 0, 1, 1)),
+            // top
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(0, 0, Environment.FOREGROUND.width, 1)),
+            // top right
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(Environment.FOREGROUND.width - 1, 0, 1, 1)),
+            // right
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(Environment.FOREGROUND.width - 1, 0, 1, Environment.FOREGROUND.height)),
+            // bottom right
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(Environment.FOREGROUND.width - 1, Environment.FOREGROUND.height - 1, 1, 1)),
+            // bottom
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(0, Environment.FOREGROUND.height - 1, Environment.FOREGROUND.width, 1)),
+            // bottom left
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(0, Environment.FOREGROUND.height - 1, 1, 1)),
+            // left
+            new PIXI.Texture(Environment.FOREGROUND, new PIXI.Rectangle(0, 0, 1, Environment.FOREGROUND.height)),
+        ];
+        const PADDING = 2000;
+
+        const OFFSETS = [
+            new Vec2(-PADDING, -PADDING),
+            new Vec2(0, -PADDING),
+            new Vec2(Environment.FOREGROUND.width, -PADDING),
+            new Vec2(Environment.FOREGROUND.width, 0),
+            new Vec2(Environment.FOREGROUND.width, Environment.FOREGROUND.height),
+            new Vec2(0, Environment.FOREGROUND.height),
+            new Vec2(-PADDING, Environment.FOREGROUND.height),
+            new Vec2(-PADDING, 0),
+        ];
+
+        const SIZES = [
+            new Vec2(PADDING, PADDING),
+            new Vec2(Environment.FOREGROUND.width, PADDING),
+            new Vec2(PADDING, PADDING),
+            new Vec2(PADDING, Environment.FOREGROUND.height),
+            new Vec2(PADDING, PADDING),
+            new Vec2(Environment.FOREGROUND.width, PADDING),
+            new Vec2(PADDING, PADDING),
+            new Vec2(PADDING, Environment.FOREGROUND.height),
+        ];
+
+        for (let i = 0; i < FOREGROUND_EDGES.length; i++) {
+            const edge = new PIXI.Sprite(FOREGROUND_EDGES[i]);
+            edge.position.x += OFFSETS[i].x;
+            edge.position.y += OFFSETS[i].y;
+            edge.width = SIZES[i].x;
+            edge.height = SIZES[i].y;
+            Renderer.foreground.addChild(edge);
+        }
+
         Environment.maskRenderTexture = PIXI.RenderTexture.create({width: 0, height: 0});
 
         Environment.foregroundMaskSprite = new PIXI.Sprite(Environment.FOREGROUND);

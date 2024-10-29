@@ -7,6 +7,7 @@ Snake :: struct {
     position: Vector2;
     velocity: Vector2;
     direction: Vector2;
+    valid_direction: Vector2;
     boost_requested: bool;
     points: [20] Vector2;
     point_count: int;
@@ -15,7 +16,7 @@ Snake :: struct {
     available_boost_charge: float = max_boost_charge;
     boost_recharge_ticks: int;
     aabb: AABB2;
-    score: int;
+    score: int = 100000;
     dead: bool;
 }
 
@@ -26,6 +27,10 @@ free :: (snake: Snake) {
 update :: (snake: *Snake) {
     gravity :: 0.4;
     speed :: 4.0;
+
+    if length_squared(snake.direction) > 0.01 {
+        snake.valid_direction = normalize(snake.direction);
+    }
 
     old_available_boost_charge := snake.available_boost_charge;
 
@@ -38,7 +43,9 @@ update :: (snake: *Snake) {
     accel_vec := snake.direction;
     accel_length := length(accel_vec);
     accel_length = clamp(accel_length - 10, 0, 20);
-    accel_vec = normalize(accel_vec) * accel_length * 0.02;
+    // force movement always
+    accel_length = accel_length * (10.0 / 20.0) + 10.0;
+    accel_vec = snake.valid_direction * accel_length * 0.02;
 
     friction := 0.02;
     boosting := false;
@@ -202,8 +209,8 @@ check_damage :: (snake: *Snake) {
             enemy_body_line := Line2.{curr_point, next_point};
             _, _, _, _, bite_distance_squared := nearest_point(head_line, enemy_body_line);
             if bite_distance_squared <= total_radius * total_radius {
-                potential_snake.dead = true;
-                snake.score += potential_snake.score / 2;
+                snake.dead = true;
+                potential_snake.score += snake.score / 2;
             }
         }
     }
@@ -220,7 +227,7 @@ eat_food :: (snake: *Snake) {
 
     head_line := Line2.{points[1], points[2]};
 
-    eat_count := maybe_eat_food(head_line);
+    eat_count := maybe_eat_food(head_line, get_scale(snake));
     snake.score += eat_count;
 }
 
@@ -235,7 +242,7 @@ eat_boost :: (snake: *Snake) {
 
     head_line := Line2.{points[1], points[2]};
 
-    ate := maybe_eat_boost(head_line);
+    ate := maybe_eat_boost(head_line, get_scale(snake));
     if ate {
         snake.available_boost_charge = max_boost_charge;
     }
