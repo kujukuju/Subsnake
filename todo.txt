@@ -1,2 +1,24 @@
 
+tomorrow:
+
+improve shitty title screen
+
+add score board
+
+add player names
+
+if chat is super easy then add it otherwise don't
+
+fake fat goblin ads
+
+google analytics I guess
+
+
+
+
+
 email jon that importing Compiler breaks the program but I bet this isn't reproducable...
+
+maybe force parallax layers to move a constant speed regardless of screen scaling
+
+check nearby??? or invuln ticks

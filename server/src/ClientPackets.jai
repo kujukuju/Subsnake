@@ -1,6 +1,7 @@
 
 ClientPacketType :: enum u8 {
     Inputs;
+    Play;
 }
 
 ClientPacket :: struct {
@@ -12,4 +13,9 @@ ClientInputsPacket :: struct {
     packet.type = .Inputs;
     direction: Vector2 #align 1;
     boost: u8 #align 1;
+} #no_padding
+
+ClientPlayPacket :: struct {
+    using #as packet: ClientPacket #align 1;
+    packet.type = .Play;
 } #no_padding

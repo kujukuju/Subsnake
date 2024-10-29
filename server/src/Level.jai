@@ -14,9 +14,10 @@ load_level :: () {
     
     for y: 0..height - 1 {
         for x: 0..width - 1 {
-            index := y * width + x;
+            pixel := get_pixel(physics_image, x, y);
 
-            pixels[index] = physics_image.pixels[index * 4 + 3] > 0;
+            index := y * width + x;
+            pixels[index] = pixel[3] > 127;
         }
     }
 }

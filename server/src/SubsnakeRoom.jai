@@ -4,6 +4,8 @@
 #add_context loop_semaphore: *Semaphore;
 #add_context done_semaphore: *Semaphore;
 #add_context snake_manager: SnakeManager;
+#add_context food_manager: FoodManager;
+#add_context spawn_manager: SpawnManager;
 #add_context level: Level;
 
 run_room :: (thread: *Thread) -> int {
@@ -16,6 +18,8 @@ run_room :: (thread: *Thread) -> int {
     context.snake_manager.snake_tree = create_bounding_tree2(*Snake);
 
     load_level();
+    load_food();
+    load_spawns();
 
     loop_room();
 
@@ -33,6 +37,7 @@ loop_room :: () {
         events := get_events(context.room_id);
         process_events(events);
 
+        food_manager_update();
         snake_manager_update();
 
         signal(context.done_semaphore);

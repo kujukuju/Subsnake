@@ -22,10 +22,26 @@ load_image :: (path: *u8) -> Image {
     return image;
 }
 
+get_pixel :: (image: Image, x: int, y: int) -> [4] u8 {
+    if x < 0 || x >= image.width || y < 0 || y >= image.height {
+        empty: [4] u8;
+        return empty;
+    }
+
+    pixels: [] [4] u8;
+    pixels.data = xx image.pixels.data;
+    pixels.count = image.pixels.count / 4;
+
+    index := y * image.width + x;
+    return pixels[index];
+}
+
 snake_image: Image;
 physics_image: Image;
+food_image: Image;
 
 load_assets :: () {
     snake_image = load_image("assets/wormthing.png");
     physics_image = load_image("assets/physics.png");
+    food_image = load_image("assets/food.png");
 }

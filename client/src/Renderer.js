@@ -13,6 +13,11 @@ class Renderer {
     static midground = new PIXI.Container();
     static underground = new PIXI.Container();
     static names = new PIXI.Container();
+    static food = new PIXI.ParticleContainer(FOOD_POSITIONS.length, {uvs: true});
+    static boost = new PIXI.ParticleContainer(BOOST_POSITIONS.length, {uvs: true});
+    static foodExits = new PIXI.Container();
+    static boostExits = new PIXI.Container();
+    static snakeExits = new PIXI.Container();
     static foreground = new PIXI.Container();
 
     static canvas = new DebugCanvas();
@@ -34,6 +39,11 @@ class Renderer {
         Renderer.container.addChild(Renderer.midcanvas);
         Renderer.container.addChild(Renderer.midground);
         Renderer.container.addChild(Renderer.names);
+        Renderer.container.addChild(Renderer.food);
+        Renderer.container.addChild(Renderer.boost);
+        Renderer.container.addChild(Renderer.foodExits);
+        Renderer.container.addChild(Renderer.boostExits);
+        Renderer.container.addChild(Renderer.snakeExits);
         Renderer.container.addChild(Renderer.foreground);
         Renderer.container.addChild(Renderer.underground);
         Renderer.container.addChild(Renderer.canvas);

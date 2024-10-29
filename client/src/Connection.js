@@ -38,6 +38,7 @@ class Connection {
     static opened() {
         console.log('Actually opened!');
 
+        // request room
         this.send([0]);
     }
 

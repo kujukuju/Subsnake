@@ -2639,6 +2639,9 @@ DynamicTree.s_subInput = new box2d.b2RayCastInput();
 DynamicTree.s_combinedAABB = new box2d.b2AABB();
 DynamicTree.s_aabb = new box2d.b2AABB();
 
+DynamicTree.AABB = box2d.b2AABB;
+DynamicTree.RayCastInput = box2d.b2RayCastInput;
+
 /**
  * Get proxy user data.
  * @export

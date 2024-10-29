@@ -51,19 +51,15 @@ process_events :: (events: [] mg_ws_server_event) {
 }
 
 process_connected :: (connection: u32) {
-    create_snake(connection);
-
     add_packet(context.room_id, connection, RoomSetClientPacket.{
         id = connection,
     });
+
+    send_initial_food_packets(connection);
 }
 
 process_disconnected :: (connection: u32) {
     remove_snake(connection);
-
-    add_packet(context.room_id, connection, RoomRemoveEntityPacket.{
-        id = connection,
-    });
 }
 
 process :: (connection: u32, packet: *ClientInputsPacket) {
@@ -71,5 +67,11 @@ process :: (connection: u32, packet: *ClientInputsPacket) {
     if snake {
         snake.direction = packet.direction;
         snake.boost_requested = !!packet.boost;
+    }
+}
+
+process :: (connection: u32, packet: *ClientPlayPacket) {
+    if !get_snake(connection) {
+        create_snake(connection);
     }
 }

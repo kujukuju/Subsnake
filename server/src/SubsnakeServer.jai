@@ -95,6 +95,8 @@ room_threads: [] Thread;
 #import "Thread";
 #import "Hash_Table";
 #import "stb_image";
+#import "File";
+#import "Random";
 
 #import "BlockAllocatorJai";
 #import "mongooseJaiHelpers";

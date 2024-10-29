@@ -95,3 +95,40 @@ for_expansion :: (wrapper: EfficientRemove($T), body: Code, flags: For_Flags) #e
         #insert (remove={check_index += 1; should_keep = false;}) body;
     }
 }
+
+pack :: (visibilities: [] bool, $pack_count: int) -> [pack_count] u8, int {
+    assert(visibilities.count <= pack_count * 8);
+    if visibilities.count > pack_count * 8 {
+        empty: [pack_count] u8;
+        return empty, 0;
+    }
+
+    packed: [pack_count] u8;
+
+    for visible, visible_index: visibilities {
+        index := visible_index / 8;
+        bit_index := visible_index % 8;
+        if visible {
+            packed[index] |= (cast(u8) 1) << bit_index;
+        }
+    }
+
+    return packed, visibilities.count;
+}
+
+unpack :: (visibilities: [$pack_count] u8, count: int) -> [pack_count * 8] bool {
+    assert(count <= pack_count * 8);
+    if count > pack_count * 8 {
+        return .[];
+    }
+
+    unpacked: [pack_count * 8] bool;
+
+    for visible_index: 0..count - 1 {
+        index := visible_index / 8;
+        bit_index := visible_index % 8;
+        unpacked[visible_index] = !!(visibilities[index] & ((cast(u8) 1) << bit_index));
+    }
+
+    return unpacked;
+}
