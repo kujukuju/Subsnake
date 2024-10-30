@@ -42,6 +42,10 @@ process_events :: (events: [] mg_ws_server_event) {
                             append(*builder, name);
                             append(*builder, "Packet);\n");
                         }
+
+                        append(*builder, "case;\n");
+                        append(*builder, "continue;\n");
+                        
                         append(*builder, "}\n");
                         return builder_to_string(*builder);
                     }();
@@ -56,10 +60,11 @@ process_connected :: (connection: u32) {
     });
 
     send_initial_food_packets(connection);
+    send_initial_snake_packets(connection);
 }
 
 process_disconnected :: (connection: u32) {
-    remove_snake(connection);
+    remove_snake(connection, 0);
 }
 
 process :: (connection: u32, packet: *ClientInputsPacket) {
@@ -72,6 +77,13 @@ process :: (connection: u32, packet: *ClientInputsPacket) {
 
 process :: (connection: u32, packet: *ClientPlayPacket) {
     if !get_snake(connection) {
-        create_snake(connection);
+        create_snake(connection, packet.name);
     }
+}
+
+process :: (connection: u32, packet: *ClientMessagePacket) {
+    add_packet(context.room_id, MessagePacket.{
+        id = connection,
+        message = packet.message,
+    });
 }

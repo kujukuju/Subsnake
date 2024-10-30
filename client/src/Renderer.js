@@ -14,6 +14,7 @@ class Renderer {
     static underground = new PIXI.Container();
     static names = new PIXI.Container();
     static food = new PIXI.ParticleContainer(FOOD_POSITIONS.length, {uvs: true});
+    static killFood = new PIXI.ParticleContainer(1000, {uvs: true});
     static boost = new PIXI.ParticleContainer(BOOST_POSITIONS.length, {uvs: true});
     static foodExits = new PIXI.Container();
     static boostExits = new PIXI.Container();
@@ -40,6 +41,7 @@ class Renderer {
         Renderer.container.addChild(Renderer.midground);
         Renderer.container.addChild(Renderer.names);
         Renderer.container.addChild(Renderer.food);
+        Renderer.container.addChild(Renderer.killFood);
         Renderer.container.addChild(Renderer.boost);
         Renderer.container.addChild(Renderer.foodExits);
         Renderer.container.addChild(Renderer.boostExits);
@@ -47,9 +49,6 @@ class Renderer {
         Renderer.container.addChild(Renderer.foreground);
         Renderer.container.addChild(Renderer.underground);
         Renderer.container.addChild(Renderer.canvas);
-
-        Renderer.parallax.scale.x = 3;
-        Renderer.parallax.scale.y = 3;
 
         Camera.addContainer(Renderer.container);
         Camera.setScaleImmediate(new Vec2(1.5, 1.5));

@@ -24,6 +24,20 @@ class Environment {
         PIXI.Texture.from('assets/1.png'),
     ];
 
+    static PARALLAX_SPEEDS = [
+        new Vec2(0.15625, 0.3333333333333333),
+        new Vec2(0.1875, 0.3888888888888889),
+        new Vec2(0.234375, 0.4722222222222222),
+        new Vec2(0.30625, 0.6111111111111112),
+        new Vec2(0.375, 0.6388888888888888),
+        new Vec2(0.4234375, 0.6861111111111111),
+        new Vec2(3.140625, 4.258333333333334),
+        new Vec2(3.2046875, 4.555555555555555),
+        new Vec2(3.35, 4.833333333333333),
+        new Vec2(3.5296875, 5.111111111111111),
+        new Vec2(4.1046875, 5.375),
+    ];
+
     static parallaxSprites = [];
 
     static initialize() {
@@ -96,7 +110,7 @@ class Environment {
         const aabb = new AABB(0, 0, Environment.FOREGROUND.width, Environment.FOREGROUND.height);
 
         for (let i = 0; i < Environment.PARALLAX_TEXTURES.length; i++) {
-            const sprite = new ParallaxSprite(Environment.PARALLAX_TEXTURES[i], aabb);
+            const sprite = new ParallaxSprite(Environment.PARALLAX_TEXTURES[i], aabb, Environment.PARALLAX_SPEEDS[i]);
             Environment.parallaxSprites.push(sprite);
             Renderer.parallax.addChild(sprite);
             

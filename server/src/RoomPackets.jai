@@ -11,6 +11,8 @@ RoomPacketType :: enum u8 {
     SetBoost;
     SetRemainingBoost;
     SetScore;
+    Message;
+    CreateSnake;
 }
 
 RoomPacket :: struct {
@@ -36,6 +38,7 @@ RoomRemoveEntityPacket :: struct {
     using #as packet: RoomPacket #align 1;
     packet.type = .RemoveEntity;
     id: u32 #align 1;
+    killer: u32 #align 1;
 } #no_padding
 
 EatFoodPacket :: struct {
@@ -87,4 +90,18 @@ SetScorePacket :: struct {
     packet.type = .SetScore;
     id: u32 #align 1;
     score: u32 #align 1;
+} #no_padding
+
+MessagePacket :: struct {
+    using #as packet: RoomPacket #align 1;
+    packet.type = .Message;
+    id: u32 #align 1;
+    message: [240] s32 #align 1;
+} #no_padding
+
+CreateSnakePacket :: struct {
+    using #as packet: RoomPacket #align 1;
+    packet.type = .CreateSnake;
+    id: u32 #align 1;
+    name: [24] s32 #align 1;
 } #no_padding

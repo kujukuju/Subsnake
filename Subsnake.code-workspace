@@ -44,6 +44,9 @@
         },
         {
             "path": "../JaiMath"
+        },
+        {
+            "path": "../AyayaSwordGame"
         }
     ],
     "settings": {}

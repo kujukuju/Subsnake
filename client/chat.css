@@ -1,0 +1,388 @@
+.globalChatCover {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    z-index: 3999;
+}
+
+.globalChatCover.visible {
+    display: block;
+}
+
+.chat {
+    position: absolute;
+    bottom: 12px;
+    left: 36px;
+
+    width: 540px;
+    max-width: 80vw;
+
+    color: #000000;
+
+    z-index: 300;
+
+    overflow: hidden;
+}
+
+/* for when you open the chat outside of the game */
+.chat.global {
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+
+    transform: translateX(-50%) translateY(-50%);
+
+    z-index: 4000;
+}
+
+.chat.global.transparent {
+    display: none;
+}
+
+.chat .tabContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+
+    height: 32px;
+    width: 100%;
+
+    opacity: 100%;
+    transition: 0.250s opacity ease;
+    transition-delay: 0.100s;
+    will-change: opacity;
+
+    z-index: 0;
+}
+
+.chat.transparent .tabContainer {
+    opacity: 0;
+    transition-delay: 0s;
+}
+
+.chat .tabContainer .tab {
+    display: none;
+
+    background-color: #e5d3d3;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 0;
+
+    padding: 0 16px;
+
+    font-size: 15px;
+    line-height: 32px;
+}
+
+.chat.tabs .tabContainer .tab {
+    display: block;
+}
+
+.chat .tabContainer .exit {
+    display: none;
+
+    background-color: #ada29b;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 0;
+
+    padding: 0 16px;
+
+    font-size: 15px;
+    line-height: 32px;
+}
+
+.chat.global .tabContainer .exit {
+    display: block;
+
+    font-family: Arial, sans-serif;
+}
+
+.chat .tabContainer .space {
+    flex-grow: 1;
+
+    padding: 0;
+    width: 32px;
+}
+
+.chat .tabContainer .tab.selected {
+    z-index: 20;
+}
+
+.chat .foreground {
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    transition: 0.250s filter ease;
+    transition-delay: 0.100s;
+    will-change: filter;
+}
+
+.chat.transparent .foreground {
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0));
+    transition-delay: 0s;
+}
+
+.chat.tabs .foreground .tabContainer,
+.chat.global .foreground .tabContainer {
+    z-index: 20;
+}
+
+.chat .foreground .tabContainer .tab {
+    opacity: 0;
+    transition: 100ms opacity ease;
+    will-change: opacity;
+
+    background-color: #fff5f5;
+}
+
+.chat .foreground .tabContainer .exit {
+    opacity: 0;
+    transition: 100ms opacity ease;
+    will-change: opacity;
+
+    background-color: #fff5f5;
+}
+
+.chat .foreground .tabContainer .exit:hover,
+.chat .foreground .tabContainer .tab:hover {
+    opacity: 1;
+
+    cursor: url('./assets/cursor/cursor-expanded.cur'), pointer;
+}
+
+.chat .foreground .tabContainer .exit.active,
+.chat .foreground .tabContainer .tab.active {
+    opacity: 1;
+
+    cursor: url('./assets/cursor/cursor.cur'), default;
+}
+
+.chat .foreground .historyBackground {
+    position: absolute;
+    top: 0;
+
+    width: 100%;
+    height: calc(320rem / 12);
+
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.5);
+
+    opacity: 100%;
+    transition: 0.250s opacity ease;
+    transition-delay: 0.100s;
+    will-change: opacity;
+
+    background-color: #fff5f5;
+
+    z-index: 10;
+}
+
+.chat.transparent .foreground .historyBackground {
+    opacity: 0%;
+    transition-delay: 0s;
+}
+
+.chat.tabs .foreground .historyBackground,
+.chat.global .foreground .historyBackground {
+    top: 32px;
+    height: calc((320rem / 12) - 32px);
+}
+
+.chat .foreground .history {
+    position: relative;
+    top: 0;
+
+    width: 100%;
+    height: calc(320rem / 12);
+
+    margin-bottom: 0;
+
+    z-index: 20;
+}
+
+.chat.tabs .foreground .history,
+.chat.global .foreground .history {
+    top: 32px;
+    height: calc((320rem / 12) - 32px);
+    margin-bottom: 32px;
+}
+
+.chat .foreground .history .historyText {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    bottom: 8px;
+    right: 16px;
+
+    overflow-y: auto;
+
+    font-size: 15px;
+
+    z-index: 10;
+}
+
+.chat .foreground .history .historyText::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.chat.transparent .foreground .history .historyText::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.chat .foreground .history .historyText .historyTextScroll {
+    position: relative;
+
+    padding: 0 8px;
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    width: 100%;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine {
+    padding-left: 16px;
+
+    transition: 0.250s color ease;
+
+    color: #000000;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine.self {
+    color: #004566;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine.private {
+    color: #9f30b1;
+}
+
+.chat.transparent .foreground .history .historyText .historyTextScroll .historyLine {
+    color: #ffffff;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine {
+    margin-top: 8px;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine .historyLineName {
+    display: inline;
+    margin-left: -16px;
+
+    user-select: text;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine .historyLineColon {
+    display: inline;
+
+    user-select: text;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine .historyLineText {
+    display: inline;
+
+    user-select: text;
+}
+
+.chat .foreground .history .historyText .historyTextScroll .historyLine.notice {
+    color: #982222;
+    padding-left: 0;
+}
+
+.chat .foreground .input {
+    position: relative;
+
+    width: 100%;
+    background-color: #e5d3d3;
+
+    opacity: 100%;
+    transition: 0.250s opacity ease;
+    transition-delay: 0.100s;
+    will-change: opacity;
+}
+
+.chat.hiddenInput .foreground .input {
+    display: none;
+}
+
+.chat.transparent .foreground .input {
+    opacity: 0%;
+    transition-delay: 0s;
+}
+
+.chat .foreground .input .inputText {
+    display: flex;
+
+    z-index: 10;
+}
+
+.chat .foreground .input .inputText input {
+    padding: 8px 16px;
+    margin: 0;
+    border: 0;
+
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-shrink: 0;
+
+    box-sizing: border-box;
+
+    background-color: transparent;
+
+    color: #000000;
+    font-family: Pixel, sans-serif;
+
+    width: 100%;
+
+    outline: none;
+
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.chat.transparent .foreground .input .inputText input {
+    cursor: url('./assets/cursor/cursor.cur'), default;
+}
+
+.chat .foreground .input .inputText .sendButton {
+    height: 21px;
+    width: auto;
+
+    /* font height + padding - this height / 2 */
+    padding: calc((15px + 16px - 21px) / 2);
+
+    transition: 100ms height ease, 100ms padding ease;
+    will-change: height, padding;
+
+    cursor: url('./assets/cursor/cursor-expanded.cur'), pointer;
+}
+
+.chat .foreground .input .inputText .sendButton:hover {
+    height: 18px;
+    padding: calc((15px + 16px - 18px) / 2);
+}
+
+.chat .foreground .chatCover {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 50;
+}
+
+.chat.transparent .foreground .chatCover {
+    display: block;
+}

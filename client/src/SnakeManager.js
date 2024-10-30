@@ -17,10 +17,27 @@ class Snake {
 
     score;
 
-    constructor(id) {
+    spawnTime;
+    name;
+
+    nameText;
+
+    constructor(id, name) {
         this.id = id;
         this.position = new Vec2(1343, 729);
         this.velocity = new Vec2();
+
+        const scale = this.getScale();
+
+        this.name = name;
+        this.nameText = new PIXI.Text(name, {fontFamily: 'Pixel', fontSize: 48, fill: 0x0f0f19, align: 'center'});
+        this.nameText.anchor.x = 0.5;
+        this.nameText.anchor.y = 1;
+        this.nameText.scale.x = scale / 3.0;
+        this.nameText.scale.y = scale / 3.0;
+        // if (id !== clientID) {
+            Renderer.names.addChild(this.nameText);
+        // }
 
         this.points = [];
         for (let i = 0; i <= 20; i++) {
@@ -28,6 +45,7 @@ class Snake {
         }
 
         this.sprite = new PIXI.SimpleRope(Snake.TEXTURE, this.points);
+        this.sprite.filters = [new HueShiftFilter(Math.random())];
         this.undergroundSprite = new PIXI.SimpleRope(Snake.TEXTURE, this.points);
         this.undergroundSprite.tint = 0x000000;
 
@@ -37,6 +55,8 @@ class Snake {
 
         this.score = 0;
 
+        this.spawnTime = Loop.loopTime;
+
         Renderer.midground.addChild(this.sprite);
         Renderer.underground.addChild(this.undergroundSprite);
     }
@@ -44,12 +64,20 @@ class Snake {
     destroy() {
         this.sprite.destroy();
         this.undergroundSprite.destroy();
+        this.nameText.destroy();
     }
 
     update() {
         const scale = this.getScale();
 
         const initialPointOffset = this.interp.getTickOffset(Date.now() - TICK_MS * 2);
+
+        let alpha = 1;
+        if (Loop.loopTime - this.spawnTime < 4000) {
+            alpha = (Loop.loopTime - this.spawnTime) % 400 > 200 ? 0.25 : 0.5;
+        }
+        this.sprite.alpha = alpha;
+        this.undergroundSprite.alpha = alpha;
 
         const points = [];
         this.history.getPoints(points, this.points.length, initialPointOffset, Snake.TEXTURE.width * scale);
@@ -70,6 +98,14 @@ class Snake {
             this.sprite.position.y = startY;
             this.undergroundSprite.position.x = startX;
             this.undergroundSprite.position.y = startY;
+
+            const namePointIndex = Math.min(2, points.length - 1);
+            const namePosition = points[namePointIndex];
+
+            this.nameText.position.x = startX + namePosition.x * scale;
+            this.nameText.position.y = startY + namePosition.y * scale - 18;
+            this.nameText.scale.x = scale / 3.0;
+            this.nameText.scale.y = scale / 3.0;
         }
 
         while (points.length > 0 && points.length < this.points.length) {
@@ -92,9 +128,14 @@ class Snake {
         return this.interp.get(Date.now() - TICK_MS * 2);
     }
 
+    getLevel() {
+        let scale = Math.pow(this.score / 10, 0.75);
+        return Math.floor(scale / 2.0);
+    }
+
     getScale() {
         // matches jai
-        let scale = Math.pow(this.score / 10, 0.75);
+        let scale = Math.pow(this.score / 5, 0.75);
         scale = scale / 2.0 + Math.floor(scale / 2.0);
         scale /= 100.0;
 
@@ -112,8 +153,8 @@ class Snake {
 class SnakeManager {
     static snakes = {};
 
-    static addSnake(id) {
-        this.snakes[id] = new Snake(id);
+    static addSnake(id, name) {
+        this.snakes[id] = new Snake(id, name);
     }
 
     static removeSnake(id) {

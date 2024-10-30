@@ -2,6 +2,7 @@
 ClientPacketType :: enum u8 {
     Inputs;
     Play;
+    Message;
 }
 
 ClientPacket :: struct {
@@ -18,4 +19,11 @@ ClientInputsPacket :: struct {
 ClientPlayPacket :: struct {
     using #as packet: ClientPacket #align 1;
     packet.type = .Play;
+    name: [24] s32 #align 1;
+} #no_padding
+
+ClientMessagePacket :: struct {
+    using #as packet: ClientPacket #align 1;
+    packet.type = .Message;
+    message: [240] s32 #align 1;
 } #no_padding

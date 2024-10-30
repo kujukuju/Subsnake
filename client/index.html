@@ -1,118 +1,22 @@
 <html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Subsnake | Play online!</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="chat.css">
     <head>
-        <style>
-            html, body {
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-
-                background-color: #000000;
-
-user-select: none;
+        <script>
+            const LE = new Uint8Array(new Uint32Array([0x00000001]).buffer)[0] === 0x01;
+            if (!LE) {
+                console.error('Your system is not little endian. If you have any bugs, this is why. Please take note.');
             }
-
-            .canvasContainer {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-
-                user-select: none;
-            }
-
-            .titleInterface {
-                margin: 0;
-                padding-top: 20vh;
-                
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-
-                box-sizing: border-box;
-                overflow: hidden;
-
-                backdrop-filter: blur(10px);
-
-                background-color: rgba(44, 30, 36, 0.25);
-
-user-select: none;
-            }
-
-            .title {
-                position: relative;
-                left: 50%;
-
-                margin-bottom: 20vh;
-                font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-
-                display: block;
-                font-size: 8rem;
-
-                text-align: center;
-
-                transform: translateX(-50%);
-
-user-select: none;
-            }
-
-            .name {
-                position: relative;
-                left: 50%;
-
-                margin-bottom: 5vh;
-                
-                display: block;
-
-                width: 60vmin;
-                height: auto;
-
-                padding: 1rem;
-                box-sizing: border-box;
-
-                font-size: 4rem;
-                transform: translateX(-50%);
-
-                border-radius: 1rem;
-                outline: none;
-                border: none;
-            }
-
-            .play {
-                position: absolute;
-                left: 50%;
-                
-                display: block;
-
-                width: 60vmin;
-                height: auto;
-
-                padding: 1rem;
-                box-sizing: border-box;
-
-                font-size: 4rem;
-                transform: translateX(-50%);
-
-                border-radius: 1rem;
-                outline: none;
-                border: none;
-
-                background-color: #aa68ba;
-
-                cursor: pointer;
-
-                transition: 200ms background-color ease;
-
-                user-select: none;
-            }
-
-            .play:hover, .play:active {
-                background-color: #d46aee;
-            }
-        </style>
-
+            const MOBILE = (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
+            let __exe = false;
+            /*E */ __exe = true;
+            const EXE = __exe;
+            const PROD = true;
+            const IFRAME_ORIGIN = (window.location !== window.parent.location) ? document.referrer : null;
+        </script>
         <script src="libs/pixi.js"></script>
         <script src="libs/pixelscan.js"></script>
 
@@ -120,6 +24,7 @@ user-select: none;
 
         <script src="src/BoostManager.js"></script>
         <script src="src/BoostPositions.js"></script>
+        <script src="src/ChatManager.js"></script>
         <script src="src/ClientInput.js"></script>
         <script src="src/Connection.js"></script>
         <script src="src/Environment.js"></script>
@@ -127,24 +32,71 @@ user-select: none;
         <script src="src/FoodManager.js"></script>
         <script src="src/FoodPositions.js"></script>
         <script src="src/History.js"></script>
+        <script src="src/HueShiftFilter.js"></script>
+        <script src="src/InputManager.js"></script>
         <script src="src/Interp.js"></script>
+        <script src="src/KillPoints.js"></script>
         <script src="src/Logic.js"></script>
         <script src="src/Loop.js"></script>
+        <script src="src/MobileInputProcessorSystem.js"></script>
         <script src="src/OverlayFilter.js"></script>
         <script src="src/PacketProcessor.js"></script>
         <script src="src/Packets.js"></script>
         <script src="src/Renderer.js"></script>
+        <script src="src/ScoreBoxManager.js"></script>
         <script src="src/SnakeManager.js"></script>
         <script src="src/TitleManager.js"></script>
         <script src="src/Utilities.js"></script>
     </head>
     <body>
         <div class="canvasContainer" id="canvas-container"></div>
+        <div class="globalChatCover" id="global-chat-cover"></div>
+        <div class="chat transparent" id="chat-container">
+            <div class="tabContainer" id="tab-background-container">
+                <div class="space" id="background-space"></div>
+                <div class="exit">
+                    X
+                </div>
+            </div>
+            <div class="foreground">
+                <div class="tabContainer" id="tab-container">
+                    <div class="space" id="foreground-space"></div>
+                    <div class="exit" data-button="default" id="chat-exit-button">
+                        X
+                    </div>
+                </div>
+                <div class="historyBackground"></div>
+                <div class="history">
+                    <div class="historyText" id="chat-history-text">
+                        <div class="historyTextScroll" id="chat-history-text-scroll"></div>
+                    </div>
+                </div>
+                <div class="input">
+                    <div class="inputText" id="chat-input-text">
+                        <input type="text" id="chat-input-text-input" maxlength="240" />
+                        <img id="send-button" class="sendButton" src="assets/send-black.svg" alt="chat send button" data-button="default" draggable="false" />
+                    </div>
+                </div>
+                <div class="chatCover"></div>
+            </div>
+        </div>
+        <div class="hud" id="hud" style="display:none;">
+            <img src="assets/chat-icon.svg" class="chatExpandTab expanded" id="chat-expand-tab" alt="chat icon" draggable="false" data-button="default" />
+            <div class="scorebox" id="scorebox-container">
+                <div class="scores">
+                    <div class="leadersHeader">Leaders</div>
+                    <div id="score-lines-container">
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-controls" class="mobileControls" style="display:block;">
+            </div>
+        </div>
         <div class="titleInterface" id="title-interface" style="display:block;">
             <div class="title">
                 Subsnake
             </div>
-            <input class="name" type="text">
+            <input class="name" id="name" type="text" maxlength="24">
             <button class="play" id="play">Play</button>
         </div>
     </body>

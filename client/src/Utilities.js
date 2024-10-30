@@ -1,7 +1,5 @@
 class Utilities {
     static hermite(t, point0, point1, tangential0, tangential1, returnPoint) {
-        throw 'NO HERMITE!!!';
-        
         const n1 = 2 * t * t * t - 3 * t * t + 1;
         const n2 = t * t * t - 2 * t * t + t;
         const n3 = -2 * t * t * t + 3 * t * t;

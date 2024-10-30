@@ -16,8 +16,11 @@ Snake :: struct {
     available_boost_charge: float = max_boost_charge;
     boost_recharge_ticks: int;
     aabb: AABB2;
-    score: int = 100000;
+    score: int;
     dead: bool;
+    killer_id: u32;
+    spawn_protection_ticks: int = TICKRATE * 4;
+    name: [24] s32;
 }
 
 free :: (snake: Snake) {
@@ -26,10 +29,13 @@ free :: (snake: Snake) {
 
 update :: (snake: *Snake) {
     gravity :: 0.4;
-    speed :: 4.0;
 
     if length_squared(snake.direction) > 0.01 {
         snake.valid_direction = normalize(snake.direction);
+    }
+
+    if snake.spawn_protection_ticks > 0 {
+        snake.spawn_protection_ticks -= 1;
     }
 
     old_available_boost_charge := snake.available_boost_charge;
@@ -46,6 +52,11 @@ update :: (snake: *Snake) {
     // force movement always
     accel_length = accel_length * (10.0 / 20.0) + 10.0;
     accel_vec = snake.valid_direction * accel_length * 0.02;
+
+    accel_backwards_strength := max(-dot(normalize(accel_vec), normalize(snake.velocity)), 0);
+    accel_ortho := Vector2.{-snake.velocity.y, snake.velocity.x};
+    accel_ortho = project(accel_ortho, normalize(accel_vec));
+    accel_vec = (normalize(accel_vec) * (1 - accel_backwards_strength) + normalize(accel_ortho) * accel_backwards_strength) * length(accel_vec);
 
     friction := 0.02;
     boosting := false;
@@ -94,6 +105,9 @@ update :: (snake: *Snake) {
 
     underground_friction_strength := ifx boosting then 0.0 else underground_strength / 2.0;
 
+    // allow faster movement in air but less control?
+    friction *= underground_strength * 0.5 + 0.5;
+
     friction_force := snake.velocity * (underground_friction_strength + 0.5);
     magnitude_squared := length_squared(friction_force);
     friction_force = normalize(-friction_force) * max(magnitude_squared * friction, 0.1);
@@ -137,7 +151,7 @@ update :: (snake: *Snake) {
 }
 
 get_body_radius :: (snake: *Snake) -> float {
-    body_radius :: 12.0;
+    body_radius :: 8.0;
     scale := get_scale(snake);
     return body_radius * scale;
 }
@@ -174,6 +188,11 @@ calculate_snake_aabb :: (snake: *Snake) -> AABB2 {
 }
 
 check_damage :: (snake: *Snake) {
+    if snake.dead || snake.spawn_protection_ticks > 0 {
+        // you can't kill snakes that are already dead
+        return;
+    }
+
     points: [] Vector2;
     points.data = snake.points.data;
     points.count = snake.point_count;
@@ -187,6 +206,10 @@ check_damage :: (snake: *Snake) {
 
     for potential_snake: query(*context.snake_manager.snake_tree, snake.aabb) {
         if potential_snake == snake {
+            continue;
+        }
+
+        if potential_snake.spawn_protection_ticks > 0 {
             continue;
         }
 
@@ -210,6 +233,7 @@ check_damage :: (snake: *Snake) {
             _, _, _, _, bite_distance_squared := nearest_point(head_line, enemy_body_line);
             if bite_distance_squared <= total_radius * total_radius {
                 snake.dead = true;
+                snake.killer_id = potential_snake.id;
                 potential_snake.score += snake.score / 2;
             }
         }
@@ -250,7 +274,7 @@ eat_boost :: (snake: *Snake) {
 
 get_scale :: (snake: *Snake) -> float {
     // matches js
-    scale := pow(snake.score / 10.0, 0.75);
+    scale := pow(snake.score / 5.0, 0.75);
     scale = scale / 2.0 + floor(scale / 2.0);
     scale /= 100.0;
     return (1.0 - exp(-scale * 2.0)) * 3.5 + 0.5;
@@ -262,19 +286,29 @@ SnakeManager :: struct {
     snake_tree: BoundingTree2(*Snake);
 }
 
-create_snake :: (id: u32) -> *Snake {
+create_snake :: (id: u32, name: [24] s32) -> *Snake {
     snake := claim(*context.snake_manager.snakes);
     snake.id = id;
     snake.position = get_valid_spawn();
+    radians := random_get_zero_to_one_open();
+    snake.velocity.x = cos(radians) * 10;
+    snake.velocity.y = sin(radians) * 10;
+    snake.valid_direction = normalize(snake.velocity);
+    snake.name = name;
 
     print("Creating snake % %.\n", id, snake);
 
     table_set(*context.snake_manager.snake_lookup, id, snake);
 
+    add_packet(context.room_id, CreateSnakePacket.{
+        id = id,
+        name = name,
+    });
+
     return snake;
 }
 
-remove_snake :: (id: u32) {
+remove_snake :: (id: u32, killer: u32) {
     snake, found := table_find(*context.snake_manager.snake_lookup, id);
     if !found {
         return;
@@ -285,6 +319,7 @@ remove_snake :: (id: u32) {
 
     add_packet(context.room_id, RoomRemoveEntityPacket.{
         id = id,
+        killer = killer,
     });
 }
 
@@ -295,6 +330,15 @@ get_snake :: (id: u32) -> *Snake {
     }
 
     return snake;
+}
+
+send_initial_snake_packets :: (connection: u32) {
+    for snake: context.snake_manager.snakes {
+        add_packet(context.room_id, connection, CreateSnakePacket.{
+            id = snake.id,
+            name = snake.name,
+        });
+    }
 }
 
 snake_manager_update :: () {
@@ -325,7 +369,7 @@ snake_manager_update :: () {
 
     for *snake: context.snake_manager.snakes {
         if snake.dead {
-            remove_snake(snake.id);
+            remove_snake(snake.id, snake.killer_id);
         }
     }
 }

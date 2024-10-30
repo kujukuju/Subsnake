@@ -14,6 +14,11 @@ class Logic {
             Camera.setScale(new Vec2(scale, scale));
         }
 
+        MobileInputProcessorSystem.update();
+
+        KillPoints.update();
+        ScoreBoxManager.update();
+
         FoodManager.update();
         ExitAnimations.update();
 

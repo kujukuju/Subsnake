@@ -12,6 +12,9 @@ function subsnake() {
     Environment.initialize();
     FoodManager.initialize();
     BoostManager.initialize();
+    ChatManager.initialize();
+    InputManager.initialize();
+    TitleManager.initialize();
 
     Camera.setPositionImmediate(new Vec2(1343, 729));
 
@@ -20,7 +23,7 @@ function subsnake() {
     join();
 
     document.getElementById('play').onclick = () => {
-        Packets.writePlayPacket();
+        TitleManager.requestPlay();
     };
 }
 

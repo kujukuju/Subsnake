@@ -13,6 +13,8 @@ class PacketProcessor {
     static SET_BOOST = 8;
     static SET_REMAINING_BOOST = 9;
     static SET_SCORE = 10;
+    static MESSAGE = 11;
+    static CREATE_SNAKE = 12;
 
     static packets = [];
 
@@ -63,33 +65,38 @@ class PacketProcessor {
                 const velY = BinaryHelper.readFloat(bytes, index);
                 index += 4;
 
-                if (!SnakeManager.snakes[id]) {
-                    SnakeManager.addSnake(id);
+                if (SnakeManager.snakes[id]) {
+                    const latency = Date.now() - time;
+                    minimumLatency = Math.min(minimumLatency, latency);
+                    const clientTime = time + minimumLatency;
+
+                    const snake = SnakeManager.snakes[id];
+
+                    snake.position.x = posX;
+                    snake.position.y = posY;
+                    snake.velocity.x = velX;
+                    snake.velocity.y = velY;
+
+                    const scale = snake.getScale();
+
+                    snake.interp.set(clientTime, snake.position, snake.velocity);
+                    snake.history.addHistory(snake.position, snake.velocity, Snake.TEXTURE.width * scale + Snake.INTERP_PADDING * scale);
                 }
-
-                const latency = Date.now() - time;
-                minimumLatency = Math.min(minimumLatency, latency);
-                const clientTime = time + minimumLatency;
-
-                const snake = SnakeManager.snakes[id];
-
-                snake.position.x = posX;
-                snake.position.y = posY;
-                snake.velocity.x = velX;
-                snake.velocity.y = velY;
-
-                const scale = snake.getScale();
-
-                snake.interp.set(clientTime, snake.position, snake.velocity);
-                snake.history.addHistory(snake.position, snake.velocity, Snake.TEXTURE.width * scale + Snake.INTERP_PADDING * scale);
             } break;
 
             case PacketProcessor.REMOVE_ENTITY: {
                 const id = BinaryHelper.readUnsignedInt(bytes, index);
                 index += 4;
+                const killerID = BinaryHelper.readUnsignedInt(bytes, index);
+                index += 4;
 
                 if (SnakeManager.snakes[id]) {
                     ExitAnimations.addSnakeExit(SnakeManager.snakes[id].sprite.position, SnakeManager.snakes[id].points, SnakeManager.snakes[id].sprite.scale);
+
+                    if (SnakeManager.snakes[killerID]) {
+                        KillPoints.addKill(SnakeManager.snakes[id], SnakeManager.snakes[killerID]);
+                    }
+
                     SnakeManager.snakes[id].destroy();
 
                     delete SnakeManager.snakes[id];
@@ -170,6 +177,46 @@ class PacketProcessor {
 
                 if (SnakeManager.snakes[id]) {
                     SnakeManager.snakes[id].score = score;
+                }
+            } break;
+
+            case PacketProcessor.MESSAGE: {
+                const id = BinaryHelper.readUnsignedInt(bytes, index);
+                index += 4;
+
+                let message = '';
+                for (let i = 0; i < 240; i++) {
+                    const charCode = BinaryHelper.readUnsignedInt(bytes, index + i * 4);
+                    if (charCode === 0) {
+                        break;
+                    }
+                    
+                    message += String.fromCharCode(charCode);
+                }
+                index += 240 * 4;
+
+                const snakeName = String(SnakeManager.snakes[id].name ?? '-');
+
+                ChatManager.addLine(snakeName, message);
+            } break;
+
+            case PacketProcessor.CREATE_SNAKE: {
+                const id = BinaryHelper.readUnsignedInt(bytes, index);
+                index += 4;
+
+                let name = '';
+                for (let i = 0; i < 24; i++) {
+                    const charCode = BinaryHelper.readUnsignedInt(bytes, index + i * 4);
+                    if (charCode === 0) {
+                        break;
+                    }
+                    
+                    name += String.fromCharCode(charCode);
+                }
+                index += 24 * 4;
+
+                if (!SnakeManager.snakes[id]) {
+                    SnakeManager.addSnake(id, name);
                 }
             } break;
 

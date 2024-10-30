@@ -874,14 +874,19 @@ class FramedSprite extends PIXI.Sprite {
 }
 class ParallaxSprite extends PIXI.Sprite {
     aabb;
+    speed;
 
-    constructor(texture, aabb) {
+    constructor(texture, aabb, speed) {
         super(texture);
         
         this.aabb = aabb;
+        this.speed = speed;
     }
 
     update(cameraAABB) {
+        const rawCameraWidth = window.innerWidth;
+        const rawCameraHeight = window.innerHeight;
+
         const cameraCenterX = cameraAABB.x + cameraAABB.width / 2;
         const cameraCenterY = cameraAABB.y + cameraAABB.height / 2;
         const minX = this.aabb.x + cameraAABB.width / 2;
@@ -889,16 +894,21 @@ class ParallaxSprite extends PIXI.Sprite {
         const maxX = this.aabb.x + this.aabb.width - cameraAABB.width / 2;
         const maxY = this.aabb.y + this.aabb.height - cameraAABB.height / 2;
 
-        const progressX = Math.min(Math.max((cameraCenterX - minX) / (maxX - minX), 0), 1);
-        const progressY = Math.min(Math.max((cameraCenterY - minY) / (maxY - minY), 0), 1);
+        const progressX = (cameraCenterX - minX) / (maxX - minX);
+        const progressY = (cameraCenterY - minY) / (maxY - minY);
 
-        const requiredScale = Math.max(cameraAABB.width / this.texture.width, cameraAABB.height / this.texture.height, 1);
+        this.width = rawCameraWidth;
+        this.width += (this.texture.width - 1920 / 3) * ((rawCameraWidth / cameraAABB.width / 3 * 1.5 - 0.5) * 3);
+        this.height = rawCameraHeight;
+        this.height += (this.texture.height - 1080 / 3) * ((rawCameraHeight / cameraAABB.height / 3 * 1.5 - 0.5) * 3);
+
+        const requiredScale = Math.max(this.width / this.texture.width, this.height / this.texture.height);
 
         this.scale.x = requiredScale;
         this.scale.y = requiredScale;
 
-        const spriteMaxDeltaX = this.width - cameraAABB.width;
-        const spriteMaxDeltaY = this.height - cameraAABB.height;
+        const spriteMaxDeltaX = this.width - rawCameraWidth;
+        const spriteMaxDeltaY = this.height - rawCameraHeight;
 
         this.position.x = -spriteMaxDeltaX * progressX;
         this.position.y = -spriteMaxDeltaY * progressY;
