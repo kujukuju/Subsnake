@@ -274,10 +274,11 @@ eat_boost :: (snake: *Snake) {
 
 get_scale :: (snake: *Snake) -> float {
     // matches js
-    scale := pow(snake.score / 5.0, 0.75);
+    scale := pow(snake.score / 10.0, 0.75);
     scale = scale / 2.0 + floor(scale / 2.0);
     scale /= 100.0;
-    return (1.0 - exp(-scale * 2.0)) * 3.5 + 0.5;
+    
+    return (1.0 - exp(-scale * 2.0)) * 2.5 + 0.25;
 }
 
 SnakeManager :: struct {

@@ -30,12 +30,12 @@ class Snake {
         const scale = this.getScale();
 
         this.name = name;
-        this.nameText = new PIXI.Text(name, {fontFamily: 'Pixel', fontSize: 48, fill: 0x0f0f19, align: 'center'});
-        this.nameText.anchor.x = 0.5;
-        this.nameText.anchor.y = 1;
-        this.nameText.scale.x = scale / 3.0;
-        this.nameText.scale.y = scale / 3.0;
         if (id !== clientID) {
+            this.nameText = new PIXI.Text(name, {fontFamily: 'Pixel', fontSize: 48, fill: 0x0f0f19, align: 'center'});
+            this.nameText.anchor.x = 0.5;
+            this.nameText.anchor.y = 1;
+            this.nameText.scale.x = scale / 3.0;
+            this.nameText.scale.y = scale / 3.0;
             Renderer.names.addChild(this.nameText);
         }
 
@@ -59,12 +59,6 @@ class Snake {
 
         Renderer.midground.addChild(this.sprite);
         Renderer.underground.addChild(this.undergroundSprite);
-    }
-
-    destroy() {
-        this.sprite.destroy();
-        this.undergroundSprite.destroy();
-        this.nameText.destroy();
     }
 
     update() {
@@ -99,13 +93,15 @@ class Snake {
             this.undergroundSprite.position.x = startX;
             this.undergroundSprite.position.y = startY;
 
-            const namePointIndex = Math.min(2, points.length - 1);
-            const namePosition = points[namePointIndex];
+            if (this.nameText) {
+                const namePointIndex = Math.min(2, points.length - 1);
+                const namePosition = points[namePointIndex];
 
-            this.nameText.position.x = startX + namePosition.x * scale;
-            this.nameText.position.y = startY + namePosition.y * scale - 18;
-            this.nameText.scale.x = scale / 3.0;
-            this.nameText.scale.y = scale / 3.0;
+                this.nameText.position.x = startX + namePosition.x * scale;
+                this.nameText.position.y = startY + namePosition.y * scale - 18;
+                this.nameText.scale.x = scale / 3.0;
+                this.nameText.scale.y = scale / 3.0;
+            }
         }
 
         while (points.length > 0 && points.length < this.points.length) {
@@ -135,18 +131,19 @@ class Snake {
 
     getScale() {
         // matches jai
-        let scale = Math.pow(this.score / 5, 0.75);
+        let scale = Math.pow(this.score / 10, 0.75);
         scale = scale / 2.0 + Math.floor(scale / 2.0);
         scale /= 100.0;
 
-        return (1 - Math.exp(-scale * 2)) * 3.5 + 0.5;
+        return (1 - Math.exp(-scale * 2)) * 2.5 + 0.25;
     }
 
     destroy() {
         this.sprite.destroy();
         this.undergroundSprite.destroy();
-
-        SnakeManager.removeSnake(this.id);
+        if (this.nameText) {
+            this.nameText.destroy();
+        }
     }
 }
 
@@ -155,10 +152,6 @@ class SnakeManager {
 
     static addSnake(id, name) {
         this.snakes[id] = new Snake(id, name);
-    }
-
-    static removeSnake(id) {
-        delete this.snakes[id];
     }
 
     static update() {

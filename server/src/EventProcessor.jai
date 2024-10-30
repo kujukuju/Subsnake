@@ -61,7 +61,7 @@ process_connected :: (connection: u32) {
 
     message_packet: MessagePacket;
     message_packet.id = 0;
-    text := tprint("Connected to room %.", context.room_id);
+    text := tprint("Connected to room %.", context.room_id + 1);
     for i: 0..text.count - 1 {
         message_packet.message[i] = text[i];
     }

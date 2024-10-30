@@ -98,7 +98,6 @@ class PacketProcessor {
                     }
 
                     SnakeManager.snakes[id].destroy();
-
                     delete SnakeManager.snakes[id];
                 }
             } break;

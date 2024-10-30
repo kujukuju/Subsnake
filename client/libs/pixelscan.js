@@ -493,6 +493,10 @@ class Camera {
         Camera.nextPosition.copy(position).round();
     }
 
+    static setPositionFloat(position) {
+        Camera.nextPosition.copy(position);
+    }
+
     static setPositionImmediate(position) {
         Camera.nextPosition.copy(position).round();
         Camera.position.copy(position).round();
