@@ -3,8 +3,8 @@ class Connection {
     static websocket;
 
     static connect() {
-        this.websocket = new WebSocket("ws://127.0.0.1:7625");
-        // this.websocket = new WebSocket("wss://server.subsnake.xyz:7626");
+        // this.websocket = new WebSocket("ws://127.0.0.1:7625");
+        this.websocket = new WebSocket("wss://server.subsnake.xyz:7626");
         this.websocket.binaryType = 'arraybuffer';
 
         this.websocket.addEventListener('close', event => {
