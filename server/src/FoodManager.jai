@@ -64,7 +64,7 @@ send_initial_food_packets :: (connection: u32) {
 maybe_eat_food :: (line: Line2, scale: float) -> int {
     eaten_food := 0;
 
-    food_eat_radius := 14 * scale;
+    food_eat_radius := 14 * scale + 4;
 
     aabb: AABB2;
     aabb.lower = min(line.p1, line.p2) - food_eat_radius;
@@ -93,7 +93,7 @@ maybe_eat_food :: (line: Line2, scale: float) -> int {
 maybe_eat_boost :: (line: Line2, scale: float) -> bool {
     ate_boost := false;
 
-    boost_eat_radius := 28 * scale;
+    boost_eat_radius := 28 * scale + 4;
 
     aabb: AABB2;
     aabb.lower = min(line.p1, line.p2) - boost_eat_radius;

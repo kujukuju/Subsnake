@@ -114,7 +114,7 @@ update :: (snake: *Snake) {
 
     snake.velocity += friction_force;
     
-    snake.position += snake.velocity * scale;
+    snake.position += snake.velocity * (scale + 0.5);
     if snake.position.x < 0 {
         snake.position.x = 0;
         snake.velocity.x = max(snake.velocity.x, 0) - min(snake.velocity.x, 0) / 2;
