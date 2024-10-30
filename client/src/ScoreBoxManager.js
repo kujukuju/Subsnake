@@ -27,7 +27,7 @@ class ScoreBoxManager {
 
         ScoreBoxManager.setLineCount(highscores.length);
         for (let i = 0; i < highscores.length; i++) {
-            ScoreBoxManager.setScore(i, highscores[i].snake.getLevel(), String(highscores[i].snake.name ?? '-'), highscores[i].snake.score);
+            ScoreBoxManager.setScore(i, i, String(highscores[i].snake.name || '-'), highscores[i].snake.score);
         }
     }
 

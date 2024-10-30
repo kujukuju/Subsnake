@@ -17,8 +17,13 @@ poll_connections :: (server: *mg_ws_server) {
                 if connection_found {
                     events := table_find_pointer(*room_events, connection_room);
                     assert(!!events, "Could not find room events!\n");
-
                     array_add(events, event);
+
+                    table_remove(*connection_rooms, event.id);
+                    room_connection_packets := table_find_pointer(*connection_send_packets, connection_room);
+                    if room_connection_packets {
+                        table_remove(room_connection_packets, event.id);
+                    }
                 } else {
                     print("Disconnected player without a room.\n");
                 }
@@ -44,7 +49,7 @@ poll_connections :: (server: *mg_ws_server) {
                             best_room := get_best_room();
                             table_set(*connection_rooms, event.id, best_room);
 
-                            print("Joined any % %.\n", event.id, best_room);
+                            print("Joined any % room %.\n", event.id, best_room);
 
                             connect_event: mg_ws_server_event;
                             connect_event.id = event.id;
@@ -75,7 +80,7 @@ poll_connections :: (server: *mg_ws_server) {
                             
                             table_set(*connection_rooms, event.id, best_room);
 
-                            print("Joined specific % %.\n", event.id, best_room);
+                            print("Joined specific % room %.\n", event.id, best_room);
 
                             connect_event: mg_ws_server_event;
                             connect_event.id = event.id;
@@ -173,7 +178,25 @@ add_packet :: (room: int, connection: u32, packet: $T) {
 }
 
 get_best_room :: () -> int {
-    return 0;
+    minimum_player_count := S64_MAX;
+    minimum_player_room_index := 0;
+    for room_index: 0..connection_send_packets.count - 1 {
+        connection_table, room_valid := table_find(*connection_send_packets, room_index);
+        if !room_valid {
+            continue;
+        }
+
+        if connection_table.count < minimum_player_count {
+            minimum_player_count = connection_table.count;
+            minimum_player_room_index = room_index;
+        }
+
+        if connection_table.count < DESIRED_CONNECTIONS {
+            return room_index;
+        }
+    }
+
+    return minimum_player_room_index;
 }
 
 register_room :: (room: int) {

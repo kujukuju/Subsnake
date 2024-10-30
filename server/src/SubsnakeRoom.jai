@@ -1,4 +1,6 @@
 
+DESIRED_CONNECTIONS :: 32;
+
 #add_context time: float64;
 #add_context room_id: int;
 #add_context loop_semaphore: *Semaphore;

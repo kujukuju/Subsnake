@@ -21,6 +21,8 @@ class Packets {
             name = name.substring(0, 24);
         }
 
+        console.log('writing name ', name);
+
         BinaryHelper.writeByte(Packets.PLAY, this.bytes, this.bytes.length);
         for (let i = 0; i < 24; i++) {
             BinaryHelper.writeInt(name.charCodeAt(i), this.bytes, this.bytes.length);

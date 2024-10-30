@@ -30,7 +30,7 @@ class TitleManager {
 
     static requestPlay() {
         const nameInput = document.getElementById('name');
-        const name = (nameInput.value ?? nameInput.placeholder ?? '').trim();
+        const name = (nameInput.value || nameInput.placeholder || '').trim();
 
         Packets.writePlayPacket(name);
 

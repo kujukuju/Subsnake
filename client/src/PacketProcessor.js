@@ -195,7 +195,7 @@ class PacketProcessor {
                 }
                 index += 240 * 4;
 
-                const snakeName = String(SnakeManager.snakes[id].name ?? '-');
+                const snakeName = id === 0 ? 'Server' : String(SnakeManager.snakes[id]?.name || '-');
 
                 ChatManager.addLine(snakeName, message);
             } break;

@@ -53,6 +53,7 @@ html, body {
 
     display: block;
     font-size: 8rem;
+    color: #ffffff;
 
     text-align: center;
 
@@ -106,7 +107,7 @@ button.play {
     outline: none;
     border: none;
 
-    background-color: #aa68ba;
+    background-color: #6ec975;
 
     cursor: url('./assets/cursor/cursor-expanded.cur'), pointer;
 
@@ -116,7 +117,7 @@ button.play {
 }
 
 .play:hover, .play:active {
-    background-color: #d46aee;
+    background-color: #308c36;
 }
 
 .hud {

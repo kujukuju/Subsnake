@@ -6,7 +6,7 @@ main :: () {
     server := mg_ws_server_create(7625);
     defer mg_ws_server_free(server);
 
-    desired_room_count := 1;
+    desired_room_count := get_number_of_processors() * 2;
     room_threads = NewArray(desired_room_count, Thread);
     
     load_assets();
@@ -97,6 +97,7 @@ room_threads: [] Thread;
 #import "stb_image";
 #import "File";
 #import "Random";
+#import "System";
 
 #import "BlockAllocatorJai";
 #import "mongooseJaiHelpers";

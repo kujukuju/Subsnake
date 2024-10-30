@@ -35,9 +35,9 @@ class Snake {
         this.nameText.anchor.y = 1;
         this.nameText.scale.x = scale / 3.0;
         this.nameText.scale.y = scale / 3.0;
-        // if (id !== clientID) {
+        if (id !== clientID) {
             Renderer.names.addChild(this.nameText);
-        // }
+        }
 
         this.points = [];
         for (let i = 0; i <= 20; i++) {

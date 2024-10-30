@@ -59,6 +59,14 @@ process_connected :: (connection: u32) {
         id = connection,
     });
 
+    message_packet: MessagePacket;
+    message_packet.id = 0;
+    text := tprint("Connected to room %.", context.room_id);
+    for i: 0..text.count - 1 {
+        message_packet.message[i] = text[i];
+    }
+    add_packet(context.room_id, connection, message_packet);
+
     send_initial_food_packets(connection);
     send_initial_snake_packets(connection);
 }
