@@ -71,6 +71,22 @@
         <link rel="manifest" href="/assets/favicon/site.webmanifest">
     </head>
     <body>
+        <script>
+            if (MOBILE) {
+                document.body.classList.add('mobile');
+            }
+            const wideCheck = () => {
+                if (window.innerWidth > window.innerHeight) {
+                    document.body.classList.add('wide');
+                    document.body.classList.remove('tall');
+                } else {
+                    document.body.classList.remove('wide');
+                    document.body.classList.add('tall');
+                }
+            };
+            window.addEventListener('resize', wideCheck);
+            wideCheck();
+        </script>
         <div class="canvasContainer" id="canvas-container"></div>
         <div class="globalChatCover" id="global-chat-cover"></div>
         <div class="chat transparent" id="chat-container">
@@ -116,6 +132,22 @@
         </div>
         <div class="titleInterface" id="title-interface" style="display:block;">
             <img class="title" src="assets/title.png" alt="subsnake title image" draggable="false" />
+            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=left">
+                <img class="leftGoblins" src="assets/fatgoblins/fat_goblins_streaming_assets_right.png" />
+            </a>
+            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=right">
+                <img class="rightGoblins" src="assets/fatgoblins/fat_goblins_streaming_assets_left.png" />
+                <img class="rightContent" style="display:none;" id="fat1" src="assets/fatgoblins/fat_goblins_ambush-throw-1_cropped.mp4.gif" />
+                <img class="rightContent" style="display:none;" id="fat2" src="assets/fatgoblins/fat_goblins_break-down-doors_cropped.mp4.gif" />
+                <img class="rightContent" style="display:none;" id="fat3" src="assets/fatgoblins/fat_goblins_ice-mage-combat-2_cropped.mp4.gif" />
+                <img class="rightContent" style="display:none;" id="fat4" src="assets/fatgoblins/fat_goblins_mountain-horizontal-fly-over-1_cropped.mp4.gif" />
+                <img class="rightContent" style="display:none;" id="fat5" src="assets/fatgoblins/fat_goblins_priest-fire-ult_cropped.mp4.gif" />
+                <img class="rightAboveContent" src="assets/fatgoblins/wishlist-fat-goblins.png" />
+            </a>
+            <script>
+                const index = Math.min(Math.floor(Math.random() * 5), 4) + 1;
+                document.getElementById('fat' + index).style.display = 'block';
+            </script>
             <input class="name" id="name" type="text" maxlength="24">
             <button class="play" id="play">Play</button>
         </div>

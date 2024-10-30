@@ -50,6 +50,9 @@
         },
         {
             "path": "../SqueakyRaftsServer"
+        },
+        {
+            "path": "../IntoTheSpiritwell"
         }
     ],
     "settings": {}

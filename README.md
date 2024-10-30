@@ -1,4 +1,10 @@
 
+## Client Setup
+
+Rerun the github pages push flow manually?
+
+https://github.com/kujukuju/Subsnake/actions/
+
 ## Server Setup
 
 Upload:

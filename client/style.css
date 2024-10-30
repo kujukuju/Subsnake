@@ -37,11 +37,83 @@ html, body {
     box-sizing: border-box;
     overflow: hidden;
 
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(0.4rem);
 
     background-color: rgba(44, 30, 36, 0.25);
 
     user-select: none;
+}
+
+.titleInterface .rightGoblins {
+    position: absolute;
+    right: 0;
+    top: 60%;
+
+    transform: translateY(-50%);
+    height: 50vh;
+    width: auto;
+}
+
+body.tall .titleInterface .rightGoblins {
+    top: inherit;
+    bottom: 0;
+    transform: none;
+}
+
+.titleInterface .rightAboveContent {
+    position: absolute;
+    right: 5vw;
+    top: calc(60% - 10vw);
+
+    transform: translateY(-50%);
+    width: 20vw;
+    height: auto;
+}
+
+body.tall .titleInterface .rightAboveContent {
+    width: 60vw;
+    right: 20vw;
+    top: inherit;
+    bottom: 40vw;
+    transform: none;
+}
+
+.titleInterface .rightContent {
+    position: absolute;
+    right: 5vw;
+    top: 60%;
+
+    transform: translateY(-50%) scale(1);
+    width: 20vw;
+    height: auto;
+
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.75);
+    border: 2px solid #000000;
+
+    animation: 6000ms bounceFrames 2750ms infinite ease-in-out;
+}
+
+body.tall .titleInterface .rightContent {
+    width: 80vw;
+    right: 10vw;
+    top: inherit;
+    bottom: 5vw;
+    transform: none;
+}
+
+.titleInterface .leftGoblins {
+    position: absolute;
+    left: 0;
+    top: 60%;
+
+    transform: translateY(-50%);
+    height: 50vh;
+}
+
+body.tall .titleInterface .leftGoblins {
+    top: inherit;
+    bottom: 0;
+    transform: none;
 }
 
 .title {
@@ -269,6 +341,46 @@ button.play {
 
     background-color: #ffffff;
 }
+
+@keyframes bounceFrames {
+    0% {
+        transform: translateY(-50%) scale(1);
+    }
+
+    4% {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    8% {
+        transform: translateY(-50%) scale(1);
+    }
+
+    100% {
+        transform: translateY(-50%) scale(1);
+    }
+}
+/* 
+@keyframes bounceFrames {
+    0% {
+        transform: translateY(-50%) rotate(0);
+    }
+
+    2% {
+        transform: translateY(-50%) rotate(5deg);
+    }
+
+    4% {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+
+    6% {
+        transform: translateY(-50%) rotate(0);
+    }
+
+    100% {
+        transform: translateY(-50%) rotate(0);
+    }
+} */
 
 @media screen and (max-width: 1024px), screen and (max-height: 768px) {
     html, body {

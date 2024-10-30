@@ -8,6 +8,12 @@ class TitleManager {
             name = TitleManager.fakeName;
         }
 
+        document.getElementById('name').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                TitleManager.requestPlay();
+            }
+        });
+
         document.getElementById('name').placeholder = name;
     }
 
@@ -25,6 +31,14 @@ class TitleManager {
         } else if (!hasClient && titleInterface.style.display === 'none') {
             titleInterface.style.display = 'block';
             hudInterface.style.display = 'none';
+
+            document.getElementById('fat1').style.display = 'none';
+            document.getElementById('fat2').style.display = 'none';
+            document.getElementById('fat3').style.display = 'none';
+            document.getElementById('fat4').style.display = 'none';
+            document.getElementById('fat5').style.display = 'none';
+            const index = Math.min(Math.floor(Math.random() * 5), 4) + 1;
+            document.getElementById('fat' + index).style.display = 'block';
         }
     }
 
