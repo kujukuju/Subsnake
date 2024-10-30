@@ -47,6 +47,9 @@
         },
         {
             "path": "../AyayaSwordGame"
+        },
+        {
+            "path": "../SqueakyRaftsServer"
         }
     ],
     "settings": {}

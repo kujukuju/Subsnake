@@ -1,6 +1,16 @@
 
 ## Server Setup
 
+Upload:
+  * main
+  * assets/
+  * subsnake.service
+  * server.subsnake.xyz
+  * libmongoose.a
+  * libmongoose.so
+
+chmod +x main
+
 sudo ufw default allow incoming
 sudo ufw default allow outgoing
 
