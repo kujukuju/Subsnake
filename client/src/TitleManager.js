@@ -39,7 +39,9 @@ class TitleManager {
             titleInterface.style.display = 'none';
             hudInterface.style.display = 'block';
 
-            window.CrazyGames.SDK.game.gameplayStart();
+            if (crazyInitialized) {
+                window.CrazyGames.SDK.game.gameplayStart();
+            }
         } else if (!hasClient && titleInterface.style.display === 'none') {
             titleInterface.style.display = 'block';
             hudInterface.style.display = 'none';
@@ -52,7 +54,9 @@ class TitleManager {
             const index = Math.min(Math.floor(Math.random() * 5), 4) + 1;
             document.getElementById('fat' + index).style.display = 'block';
 
-            window.CrazyGames.SDK.game.gameplayStop();
+            if (crazyInitialized) {
+                window.CrazyGames.SDK.game.gameplayStop();
+            }
         }
 
         if (crazyInitialized && TitleManager.crazyLoading) {
@@ -60,7 +64,7 @@ class TitleManager {
             window.CrazyGames.SDK.game.loadingStop();
         }
 
-        if (!TitleManager.showedInvite && crazyInitialized) {
+        if (crazyInitialized && !TitleManager.showedInvite) {
             window.CrazyGames.SDK.game.loadingStart();
             TitleManager.crazyLoading = true;
 
