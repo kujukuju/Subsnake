@@ -2,6 +2,9 @@
 class TitleManager {
     static fakeName = 'Snake' + Math.floor(Math.random() * 990000 + 10000);
 
+    static showedInvite = false;
+    static crazyLoading = false;
+
     static initialize() {
         let name = window.localStorage.getItem('name');
         if (!name) {
@@ -36,11 +39,7 @@ class TitleManager {
             titleInterface.style.display = 'none';
             hudInterface.style.display = 'block';
 
-            if (crazyInitialized) {
-                window.CrazyGames.SDK.game.showInviteButton({
-                    roomId: 0,
-                });
-            }
+            window.CrazyGames.SDK.game.gameplayStart();
         } else if (!hasClient && titleInterface.style.display === 'none') {
             titleInterface.style.display = 'block';
             hudInterface.style.display = 'none';
@@ -52,6 +51,27 @@ class TitleManager {
             document.getElementById('fat5').style.display = 'none';
             const index = Math.min(Math.floor(Math.random() * 5), 4) + 1;
             document.getElementById('fat' + index).style.display = 'block';
+
+            window.CrazyGames.SDK.game.gameplayStop();
+        }
+
+        if (crazyInitialized && TitleManager.crazyLoading) {
+            TitleManager.crazyLoading = false;
+            window.CrazyGames.SDK.game.loadingStop();
+        }
+
+        if (!TitleManager.showedInvite && crazyInitialized) {
+            window.CrazyGames.SDK.game.loadingStart();
+            TitleManager.crazyLoading = true;
+
+            TitleManager.showedInvite = true;
+            window.CrazyGames.SDK.game.showInviteButton({
+                roomId: 0,
+            });
+
+            if (!TitleManager.isOpen()) {
+                window.CrazyGames.SDK.game.gameplayStart();
+            }
         }
     }
 

@@ -41,6 +41,14 @@ class BoostManager {
         }
         BoostManager.barOutlineSprite.alpha = BoostManager.barSprite.alpha;
 
-        BoostManager.barSprite.width = Math.round(BoostManager.barSprite.texture.width * 3 * BoostManager.remainingBoost);
+        const scale = Math.min(3, window.innerWidth * 0.8 / BoostManager.barSprite.texture.width);
+
+        BoostManager.barSprite.position.x = Math.round(window.innerWidth / 2);
+        BoostManager.barOutlineSprite.position.x = Math.round(window.innerWidth / 2);
+
+        BoostManager.barSprite.width = Math.round(BoostManager.barSprite.texture.width * scale * BoostManager.remainingBoost);
+        BoostManager.barSprite.height = BoostManager.barSprite.texture.height * scale;
+        BoostManager.barOutlineSprite.width = BoostManager.barOutlineSprite.texture.width * scale;
+        BoostManager.barOutlineSprite.height = BoostManager.barOutlineSprite.texture.height * scale;
     }
 }
