@@ -6,7 +6,10 @@ main :: () {
     server := mg_ws_server_create(7625);
     defer mg_ws_server_free(server);
 
-    desired_room_count := get_number_of_processors() * 2;
+    // no clue what value here lol....
+    rooms_per_core :: 4;
+
+    desired_room_count := get_number_of_processors() * rooms_per_core;
     room_threads = NewArray(desired_room_count, Thread);
     
     load_assets();

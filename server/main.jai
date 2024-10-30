@@ -23,7 +23,7 @@ build :: () {
     options.output_type = .EXECUTABLE;
     options.output_executable_name = "main";
     options.temporary_storage_size = 2097152;
-    options.import_path = .["C:/jai/modules", #run tprint("%../../", #filepath), "/usr/jai/modules"];
+    options.import_path = .["C:/jai/modules", #run tprint("%../../", #filepath), "/mnt/c/jai/modules"];
 
     if release {
         set_optimization(*options, .VERY_OPTIMIZED);

@@ -1,0 +1,15 @@
+[Unit]
+Description=Subsnake Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root
+ExecStart=/root/main
+Restart=always
+RestartSec=1
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
