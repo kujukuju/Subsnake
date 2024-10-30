@@ -4,6 +4,7 @@ class Logic {
 
         Camera.update();
         Environment.update();
+        ChatManager.update();
 
         SnakeManager.update();
         if (SnakeManager.snakes[clientID]) {

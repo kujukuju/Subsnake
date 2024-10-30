@@ -15,6 +15,13 @@ class TitleManager {
         });
 
         document.getElementById('name').placeholder = name;
+
+        // if (window.CrazyGames?.SDK?.game) {
+        //     console.log(window.CrazyGames.SDK.game.isInstantJoin);
+        //     if (window.CrazyGames.SDK.game.isInstantJoin) {
+
+        //     }
+        // }
     }
 
     static update() {
@@ -28,6 +35,12 @@ class TitleManager {
         if (hasClient && titleInterface.style.display === 'block') {
             titleInterface.style.display = 'none';
             hudInterface.style.display = 'block';
+
+            if (crazyInitialized) {
+                window.CrazyGames.SDK.game.showInviteButton({
+                    roomId: 0,
+                });
+            }
         } else if (!hasClient && titleInterface.style.display === 'none') {
             titleInterface.style.display = 'block';
             hudInterface.style.display = 'none';
