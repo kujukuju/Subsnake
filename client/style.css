@@ -26,7 +26,7 @@ html, body {
 
 .titleInterface {
     margin: 0;
-    padding-top: 20vh;
+    padding-top: 10vh;
     
     position: absolute;
     top: 0;
@@ -48,16 +48,23 @@ html, body {
     position: relative;
     left: 50%;
 
-    margin-bottom: 20vh;
+    margin-bottom: 10vh;
     font-family: Pixel, sans-serif;
 
     display: block;
     font-size: 8rem;
     color: #ffffff;
 
+    max-width: 80vmin;
+    width: 200%;
+    height: auto;
+
     text-align: center;
 
     transform: translateX(-50%);
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 
     user-select: none;
 }
