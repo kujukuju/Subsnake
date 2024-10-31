@@ -54,7 +54,7 @@ class Renderer {
 
         Camera.addContainer(Renderer.container);
         Camera.setScaleImmediate(new Vec2(1.5, 1.5));
-
+s
         const canvas = Renderer.application.view;
         document.getElementById('canvas-container').appendChild(canvas);
         try {
