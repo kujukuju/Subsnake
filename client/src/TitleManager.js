@@ -72,9 +72,14 @@ class TitleManager {
             TitleManager.crazyLoading = true;
 
             TitleManager.showedInvite = true;
-            window.CrazyGames.SDK.game.showInviteButton({
+            const link = window.CrazyGames.SDK.game.inviteLink({
                 roomId: 1,
             });
+            console.log('Invite link: ', link);
+            const showLink = window.CrazyGames.SDK.game.showInviteButton({
+                roomId: 1,
+            });
+            console.log('Show invite link: ', showLink);
 
             if (!TitleManager.isOpen()) {
                 window.CrazyGames.SDK.game.gameplayStart();
