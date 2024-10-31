@@ -16,6 +16,7 @@ function subsnake() {
     InputManager.initialize();
     TitleManager.initialize();
     AudioManager.initialize();
+    Tutorial.initialize();
 
     Camera.setPositionImmediate(new Vec2(1343, 729));
 
