@@ -215,9 +215,9 @@ class PacketProcessor {
                 }
                 index += 24 * 4;
                 
-                if (IFRAME_ORIGIN) {
+                // if (IFRAME_ORIGIN) {
                     name = ChatManager.censor(name);
-                }
+                // }
 
                 if (!SnakeManager.snakes[id]) {
                     SnakeManager.addSnake(id, name);

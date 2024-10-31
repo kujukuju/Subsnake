@@ -151,9 +151,9 @@ class ChatManager {
         // if you're on the all tab, or you're on the correct friend tab, add this in
         const shouldAdd = true;
 
-        if (IFRAME_ORIGIN) {
+        // if (IFRAME_ORIGIN) {
             text = ChatManager.censor(text);
-        }
+        // }
 
         let otherID = null;
         const lineElement = document.createElement('div');
