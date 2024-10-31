@@ -119,34 +119,40 @@ class ChatManager {
         }
     }
 
+    static censor(text) {
+        const spaceCharCode = ' '.charCodeAt(0);
+        const tabCharCode = '\t'.charCodeAt(0);
+        for (let index = 0; index < text.length; index++) {
+            while (index > 0 && (text.charCodeAt(index - 1) !== spaceCharCode && text.charCodeAt(index - 1) !== tabCharCode) && index < text.length) {
+                index += 1;
+            }
+
+            // now the index is a valid location for checking profanity
+            for (let len = 1; len < extremeLongestProfanity && index + len <= text.length; len++) {
+                while (index + len + 1 <= text.length && text.charCodeAt(index + len) !== spaceCharCode && text.charCodeAt(index + len) !== tabCharCode) {
+                    len += 1;
+                }
+
+                // now we have the length of a word that ends with a space
+                const currentWord = text.toLowerCase().substring(index, index + len);
+                if (extremeProfanityFilterSet[currentWord]) {
+                    const replacement = '*'.repeat(currentWord.length);
+                    text = text.substring(0, index) + replacement + text.substring(index + currentWord.length);
+                }
+            }
+        }
+
+        return text;
+    }
+
     static addLine(name, text) {
         const scrollingHistory = document.getElementById('chat-history-text-scroll');
 
         // if you're on the all tab, or you're on the correct friend tab, add this in
         const shouldAdd = true;
 
-        if (IFRAME_ORIGIN && IFRAME_ORIGIN.includes('crazygames')) {
-            const spaceCharCode = ' '.charCodeAt(0);
-            const tabCharCode = '\t'.charCodeAt(0);
-            for (let index = 0; index < text.length; index++) {
-                while (index > 0 && (text.charCodeAt(index - 1) !== spaceCharCode && text.charCodeAt(index - 1) !== tabCharCode) && index < text.length) {
-                    index += 1;
-                }
-
-                // now the index is a valid location for checking profanity
-                for (let len = 1; len < extremeLongestProfanity && index + len <= text.length; len++) {
-                    while (index + len + 1 <= text.length && text.charCodeAt(index + len) !== spaceCharCode && text.charCodeAt(index + len) !== tabCharCode) {
-                        len += 1;
-                    }
-
-                    // now we have the length of a word that ends with a space
-                    const currentWord = text.toLowerCase().substring(index, index + len);
-                    if (extremeProfanityFilterSet[currentWord]) {
-                        const replacement = '*'.repeat(currentWord.length);
-                        text = text.substring(0, index) + replacement + text.substring(index + currentWord.length);
-                    }
-                }
-            }
+        if (IFRAME_ORIGIN) {
+            text = ChatManager.censor(text);
         }
 
         let otherID = null;

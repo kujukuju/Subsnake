@@ -18,13 +18,6 @@ class TitleManager {
         });
 
         document.getElementById('name').placeholder = name;
-
-        // if (window.CrazyGames?.SDK?.game) {
-        //     console.log(window.CrazyGames.SDK.game.isInstantJoin);
-        //     if (window.CrazyGames.SDK.game.isInstantJoin) {
-
-        //     }
-        // }
     }
 
     static update() {
@@ -83,6 +76,11 @@ class TitleManager {
 
             if (!TitleManager.isOpen()) {
                 window.CrazyGames.SDK.game.gameplayStart();
+            }
+
+            console.log('Insant join: ', window.CrazyGames.SDK.game.isInstantJoin);
+            if (TitleManager.isOpen() && window.CrazyGames.SDK.game.isInstantJoin) {
+                TitleManager.requestPlay();
             }
         }
     }
