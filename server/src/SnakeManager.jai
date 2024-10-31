@@ -118,15 +118,15 @@ update :: (snake: *Snake) {
     if snake.position.x < 0 {
         snake.position.x = 0;
         snake.velocity.x = max(snake.velocity.x, 0) - min(snake.velocity.x, 0) / 2;
-    } else if snake.position.x >= cast(float) context.level.width {
-        snake.position.x = context.level.width - 1.0;
+    } else if snake.position.x > cast(float) context.level.width {
+        snake.position.x = cast(float) context.level.width;
         snake.velocity.x = min(snake.velocity.x, 0) - max(snake.velocity.x, 0) / 2;
     }
     if snake.position.y < 0 {
         snake.position.y = 0;
         snake.velocity.y = max(snake.velocity.y, 0) - min(snake.velocity.y, 0) / 2;
-    } else if snake.position.y >= cast(float) context.level.height {
-        snake.position.y = context.level.height - 1.0;
+    } else if snake.position.y > cast(float) context.level.height {
+        snake.position.y = cast(float) context.level.height;
         snake.velocity.y = min(snake.velocity.y, 0) - max(snake.velocity.y, 0) / 2;
     }
 

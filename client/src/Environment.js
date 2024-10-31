@@ -1,5 +1,5 @@
 class Environment {
-    static FOREGROUND = PIXI.Texture.from('assets/physics.png');
+    static FOREGROUND = PIXI.Texture.from('assets/physics_shadow.png');
     static BACKGROUND = PIXI.Texture.from('assets/background.png');
 
     static foregroundSprite;
