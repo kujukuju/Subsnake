@@ -5,6 +5,8 @@ class TitleManager {
     static showedInvite = false;
     static crazyLoading = false;
 
+    static deadOpenTime = 0;
+
     static initialize() {
         let name = window.localStorage.getItem('name');
         if (!name) {
@@ -25,17 +27,23 @@ class TitleManager {
         hasClient = hasClient && clientID;
         hasClient = hasClient && SnakeManager.snakes[clientID];
 
+        if (hasClient) {
+            TitleManager.deadOpenTime = Loop.loopTime + 2000;
+        }
+
+        const shouldOpen = !hasClient && Loop.loopTime >= TitleManager.deadOpenTime;
+
         const titleInterface = document.getElementById('title-interface');
         const hudInterface = document.getElementById('hud');
 
-        if (hasClient && titleInterface.style.display === 'block') {
+        if (!shouldOpen && titleInterface.style.display === 'block') {
             titleInterface.style.display = 'none';
             hudInterface.style.display = 'block';
 
             if (crazyInitialized) {
                 window.CrazyGames.SDK.game.gameplayStart();
             }
-        } else if (!hasClient && titleInterface.style.display === 'none') {
+        } else if (shouldOpen && titleInterface.style.display === 'none') {
             titleInterface.style.display = 'block';
             hudInterface.style.display = 'none';
 
@@ -97,9 +105,6 @@ class TitleManager {
     }
 
     static isOpen() {
-        let hasClient = true;
-        hasClient = hasClient && clientID;
-        hasClient = hasClient && SnakeManager.snakes[clientID];
-        return !hasClient;
+        return document.getElementById('title-interface').style.display === 'block';
     }
 }
