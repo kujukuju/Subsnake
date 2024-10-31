@@ -166,12 +166,16 @@
             </script>
             <input class="name" id="name" type="text" maxlength="24">
             <button class="play" id="play">Play</button>
+            <a href="https://iogames.space/" class="originLink" style="display:none;" id="iogames">IOGAMES.SPACE</a>
         </div>
         <script>
             // if (!IFRAME_ORIGIN) {
             //     document.getElementById('fat-left').style.display = 'block';
             //     document.getElementById('fat-right').style.display = 'block';
             // }
+            if (IFRAME_ORIGIN && IFRAME_ORIGIN.includes('iogames.space')) {
+                document.getElementById('iogames').style.display = 'block';
+            }
         </script>
     </body>
 </html>
