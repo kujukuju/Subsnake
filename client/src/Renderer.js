@@ -20,6 +20,7 @@ class Renderer {
     static boostExits = new PIXI.Container();
     static snakeExits = new PIXI.Container();
     static foreground = new PIXI.Container();
+    static top = new PIXI.Container();
 
     static canvas = new DebugCanvas();
 
@@ -48,6 +49,7 @@ class Renderer {
         Renderer.container.addChild(Renderer.snakeExits);
         Renderer.container.addChild(Renderer.foreground);
         Renderer.container.addChild(Renderer.underground);
+        Renderer.container.addChild(Renderer.top);
         Renderer.container.addChild(Renderer.canvas);
 
         Camera.addContainer(Renderer.container);

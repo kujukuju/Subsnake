@@ -1,5 +1,7 @@
 
 class ClientInput {
+    static lastDirection = new Vec2();
+
     static update() {
         let direction = new Vec2();
         let boost = false;
@@ -14,6 +16,8 @@ class ClientInput {
             direction.copy(mouse).subtract(camera);
             boost = InputManager.mouseDownLeft;
         }
+
+        ClientInput.lastDirection.copy(direction).normalize();
 
         Packets.writeInputsPacket(direction, boost);
     }

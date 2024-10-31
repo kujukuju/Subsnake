@@ -2,9 +2,12 @@
 class BoostManager {
     static BOOST_BAR_TEXTURE = PIXI.Texture.from('assets/boost-bar.png');
     static BOOST_BAR_OUTLINE_TEXTURE = PIXI.Texture.from('assets/boost-bar-outline.png');
+    static ARROW_TEXTURE = PIXI.Texture.from('assets/arrow.png');
 
     static barSprite;
     static barOutlineSprite;
+
+    static arrowSprite;
 
     static remainingBoost = 1;
 
@@ -13,6 +16,11 @@ class BoostManager {
         BoostManager.barSprite.alpha = 0;
         BoostManager.barOutlineSprite = new PIXI.Sprite(BoostManager.BOOST_BAR_OUTLINE_TEXTURE);
         BoostManager.barOutlineSprite.alpha = 0;
+
+        BoostManager.arrowSprite = new PIXI.Sprite(BoostManager.ARROW_TEXTURE);
+        BoostManager.arrowSprite.anchor.x = 0.5;
+        BoostManager.arrowSprite.anchor.y = 0;
+        Renderer.top.addChild(BoostManager.arrowSprite);
 
         BoostManager.barSprite.scale.x = 3;
         BoostManager.barSprite.scale.y = 3;
@@ -50,5 +58,20 @@ class BoostManager {
         BoostManager.barSprite.height = BoostManager.barSprite.texture.height * scale;
         BoostManager.barOutlineSprite.width = BoostManager.barOutlineSprite.texture.width * scale;
         BoostManager.barOutlineSprite.height = BoostManager.barOutlineSprite.texture.height * scale;
+
+        let arrowScale = 1;
+        if (SnakeManager.snakes[clientID]) {
+            BoostManager.arrowSprite.alpha = 0.5;
+            arrowScale = SnakeManager.snakes[clientID].getScale() * 4;
+        } else {
+            BoostManager.arrowSprite.alpha = 0;
+        }
+
+        const cameraCenter = new Vec2(Camera.aabb.x + Camera.aabb.width / 2, Camera.aabb.y + Camera.aabb.height / 2);
+        BoostManager.arrowSprite.scale.x = arrowScale;
+        BoostManager.arrowSprite.scale.y = arrowScale;
+        BoostManager.arrowSprite.position.x = cameraCenter.x + ClientInput.lastDirection.x * 20 * arrowScale;
+        BoostManager.arrowSprite.position.y = cameraCenter.y + ClientInput.lastDirection.y * 20 * arrowScale;
+        BoostManager.arrowSprite.rotation = Math.atan2(ClientInput.lastDirection.y, ClientInput.lastDirection.x) + Math.PI / 2;
     }
 }

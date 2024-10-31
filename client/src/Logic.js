@@ -11,7 +11,7 @@ class Logic {
             Camera.setPositionFloat(SnakeManager.snakes[clientID].getRenderPosition());
 
             let scale = 3 / SnakeManager.snakes[clientID].getScale();
-            scale = (scale - 1) * 0.6 + 1.2;
+            scale = (scale - 1) * 0.4 + 0.8;
             Camera.setScale(new Vec2(scale, scale));
         }
 
