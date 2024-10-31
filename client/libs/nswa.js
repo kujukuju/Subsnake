@@ -675,26 +675,25 @@ const NSWA = {
     destination: null,
     Source,
     setListenerOrientation: function(forwardX, forwardY, forwardZ, upX, upY, upZ) {
-        // NSWA.context.listener.forwardX.setTargetAtTime(forwardX, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.forwardY.setTargetAtTime(forwardY, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.forwardZ.setTargetAtTime(forwardZ, NSWA.context.currentTime, 0.1);
-        NSWA.context.listener.forwardX.value = forwardX;
-        NSWA.context.listener.forwardY.value = forwardY;
-        NSWA.context.listener.forwardZ.value = forwardZ;
-        // NSWA.context.listener.upX.setTargetAtTime(upX, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.upY.setTargetAtTime(upY, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.upZ.setTargetAtTime(upZ, NSWA.context.currentTime, 0.1);
-        NSWA.context.listener.upX.value = upX;
-        NSWA.context.listener.upY.value = upY;
-        NSWA.context.listener.upZ.value = upZ;
+        if (NSWA.context.listener.forwardX) {
+            NSWA.context.listener.forwardX.value = forwardX;
+            NSWA.context.listener.forwardY.value = forwardY;
+            NSWA.context.listener.forwardZ.value = forwardZ;
+            NSWA.context.listener.upX.value = upX;
+            NSWA.context.listener.upY.value = upY;
+            NSWA.context.listener.upZ.value = upZ;
+        } else {
+            NSWA.context.listener.setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ);
+        }
     },
     setListenerPosition: function(x, y, z) {
-        // NSWA.context.listener.positionX.setTargetAtTime(x, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.positionY.setTargetAtTime(y, NSWA.context.currentTime, 0.1);
-        // NSWA.context.listener.positionZ.setTargetAtTime(z, NSWA.context.currentTime, 0.1);
-        NSWA.context.listener.positionX.value = x;
-        NSWA.context.listener.positionY.value = y;
-        NSWA.context.listener.positionZ.value = z;
+        if (NSWA.context.listener.positionX) {
+            NSWA.context.listener.positionX.value = x;
+            NSWA.context.listener.positionY.value = y;
+            NSWA.context.listener.positionZ.value = z;
+        } else {
+            NSWA.context.listener.setPosition(x, y, z);
+        }
     },
     setVolume(volume) {
         NSWA.destination.gain.setValueAtTime(volume, NSWA.context.currentTime);
