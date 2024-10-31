@@ -148,6 +148,7 @@ class FoodManager {
         FoodManager.food[id] = false;
 
         ExitAnimations.addFoodExit(FOOD_POSITIONS[id]);
+        AudioManager.playHitNoise(FOOD_POSITIONS[id].x, FOOD_POSITIONS[id].y);
     }
 
     static addBoost(id) {
@@ -158,5 +159,6 @@ class FoodManager {
         FoodManager.boost[id] = false;
 
         ExitAnimations.addBoostExit(BOOST_POSITIONS[id]);
+        AudioManager.playBoostNoise(BOOST_POSITIONS[id].x, BOOST_POSITIONS[id].y);
     }
 }

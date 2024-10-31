@@ -15,6 +15,7 @@ function subsnake() {
     ChatManager.initialize();
     InputManager.initialize();
     TitleManager.initialize();
+    AudioManager.initialize();
 
     Camera.setPositionImmediate(new Vec2(1343, 729));
 

@@ -34,11 +34,13 @@
             const PROD = true;
             const IFRAME_ORIGIN = (window.location !== window.parent.location) ? document.referrer : null;
         </script>
+        <script src="libs/nswa.js"></script>
         <script src="libs/pixi.js"></script>
         <script src="libs/pixelscan.js"></script>
 
         <script src="src/Subsnake.js"></script>
 
+        <script src="src/AudioManager.js"></script>
         <script src="src/BoostManager.js"></script>
         <script src="src/BoostPositions.js"></script>
         <script src="src/ChatManager.js"></script>
@@ -143,10 +145,10 @@
         </div>
         <div class="titleInterface" id="title-interface" style="display:block;">
             <img class="title" src="assets/title.png" alt="subsnake title image" draggable="false" />
-            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=left" style="display:none;">
+            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=left" style="display:none;" id="fat-left">
                 <img class="leftGoblins" src="assets/fatgoblins/fat_goblins_streaming_assets_right.png" />
             </a>
-            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=right" style="display:none;">
+            <a href="https://store.steampowered.com/app/2450350/Fat_Goblins?utm_source=subsnake&utm_content=right" style="display:none;" id="fat-right">
                 <img class="rightGoblins" src="assets/fatgoblins/fat_goblins_streaming_assets_left.png" />
                 <img class="rightContent" style="display:none;" id="fat1" src="assets/fatgoblins/fat_goblins_ambush-throw-1_cropped.mp4.gif" />
                 <img class="rightContent" style="display:none;" id="fat2" src="assets/fatgoblins/fat_goblins_break-down-doors_cropped.mp4.gif" />
@@ -162,5 +164,11 @@
             <input class="name" id="name" type="text" maxlength="24">
             <button class="play" id="play">Play</button>
         </div>
+        <script>
+            if (window.location.href.includes('subsnake.xyz') || window.location.href.includes('localhost')) {
+                document.getElementById('fat-left').style.display = 'block';
+                document.getElementById('fat-right').style.display = 'block';
+            }
+        </script>
     </body>
 </html>

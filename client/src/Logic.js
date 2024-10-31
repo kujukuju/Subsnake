@@ -15,6 +15,8 @@ class Logic {
             Camera.setScale(new Vec2(scale, scale));
         }
 
+        AudioManager.update();
+
         MobileInputProcessorSystem.update();
 
         KillPoints.update();

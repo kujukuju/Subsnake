@@ -92,6 +92,7 @@ class PacketProcessor {
 
                 if (SnakeManager.snakes[id]) {
                     ExitAnimations.addSnakeExit(SnakeManager.snakes[id].sprite.position, SnakeManager.snakes[id].points, SnakeManager.snakes[id].sprite.scale);
+                    AudioManager.playDeathNoise(SnakeManager.snakes[id].sprite.position.x, SnakeManager.snakes[id].sprite.position.y);
 
                     if (SnakeManager.snakes[killerID]) {
                         KillPoints.addKill(SnakeManager.snakes[id], SnakeManager.snakes[killerID]);

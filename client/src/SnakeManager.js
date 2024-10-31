@@ -1,5 +1,6 @@
 
 class Snake {
+    static AUDIO = new NSWA.Source('assets/small-worm.mp3', {loop: true, volume: 0.01});
     static TEXTURE = PIXI.Texture.from('assets/wormthing.png');
     static INTERP_PADDING = 200;
 
@@ -21,6 +22,8 @@ class Snake {
     name;
 
     nameText;
+
+    audio;
 
     constructor(id, name) {
         this.id = id;
@@ -56,6 +59,9 @@ class Snake {
         this.score = 0;
 
         this.spawnTime = Loop.loopTime;
+
+        this.audio = Snake.AUDIO.create();
+        this.audio.setPannerOrientation(0, 0, -1);
 
         Renderer.midground.addChild(this.sprite);
         Renderer.underground.addChild(this.undergroundSprite);
@@ -118,6 +124,26 @@ class Snake {
         this.sprite.scale.y = scale;
         this.undergroundSprite.scale.x = scale;
         this.undergroundSprite.scale.y = scale;
+
+        if (this.id == clientID) {
+            const scale = AudioManager.getScale();
+            this.audio.setPannerPosition(this.sprite.position.x * scale, this.sprite.position.y * scale, 0);
+        } else {
+            const scale = AudioManager.getScale();
+            this.audio.setPannerPosition(this.sprite.position.x * scale, this.sprite.position.y * scale, 0);
+
+            const cameraX = Camera.aabb.x + Camera.aabb.width / 2;
+            const cameraY = Camera.aabb.y + Camera.aabb.height / 2;
+            const dx = this.sprite.position.x - cameraX;
+            const dy = this.sprite.position.y - cameraY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const shake = (600 - distance) * scale;
+            if (shake > 0) {
+                Camera.shake(shake / 10);
+            }
+        }
+
+        AudioManager.autoAdjustVolume(this.audio, this.id === clientID);
     }
 
     getRenderPosition() {

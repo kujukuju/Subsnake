@@ -56,6 +56,9 @@ class TitleManager {
 
             if (crazyInitialized) {
                 window.CrazyGames.SDK.game.gameplayStop();
+                window.CrazyGames.SDK.game.showInviteButton({
+                    roomId: 1,
+                });
             }
         }
 
@@ -70,7 +73,7 @@ class TitleManager {
 
             TitleManager.showedInvite = true;
             window.CrazyGames.SDK.game.showInviteButton({
-                roomId: 0,
+                roomId: 1,
             });
 
             if (!TitleManager.isOpen()) {
