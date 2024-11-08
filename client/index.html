@@ -24,6 +24,15 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="chat.css">
     <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E536GQ284"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-4E536GQ284');
+        </script>
+
         <script>
             const LE = new Uint8Array(new Uint32Array([0x00000001]).buffer)[0] === 0x01;
             if (!LE) {
@@ -169,10 +178,10 @@
             <a href="https://iogames.space/" class="originLink" style="display:none;" id="iogames">IOGAMES.SPACE</a>
         </div>
         <script>
-            // if (!IFRAME_ORIGIN) {
-            //     document.getElementById('fat-left').style.display = 'block';
-            //     document.getElementById('fat-right').style.display = 'block';
-            // }
+            if (IFRAME_ORIGIN && IFRAME_ORIGIN.includes('iogames.space')) {
+                document.getElementById('fat-left').style.display = 'block';
+                document.getElementById('fat-right').style.display = 'block';
+            }
             if (IFRAME_ORIGIN && IFRAME_ORIGIN.includes('iogames.space')) {
                 document.getElementById('iogames').style.display = 'block';
             }
